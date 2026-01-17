@@ -4,6 +4,4 @@ height = 480
 framerate = "30/1"
 bitrate = 1000
 key = "00112233445566778899aabbccddeeff"
-iv = "unused"
 output_path = "output.ts.enc"
-
