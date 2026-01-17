@@ -47,6 +47,49 @@ pub fn build_play_pipeline(config: &Config, input_file: &str) -> String {
     )
 }
 
+pub fn build_stream_pipeline(config: &Config, dest: &str, port: u16) -> String {
+    let source = if config.device == "auto" {
+        "autovideosrc".to_string()
+    } else {
+        format!("v4l2src device={}", config.device)
+    };
+
+    format!(
+        "{} \
+        ! video/x-raw,width={},height={},framerate={} \
+        ! videoconvert \
+        ! video/x-raw,format=I420 \
+        ! queue \
+        ! x264enc tune=zerolatency speed-preset=ultrafast bitrate={} \
+        ! rtph264pay config-interval=1 mtu=1400 \
+        ! queue \
+        ! aesenc key={} iv={} per-buffer-padding=true serialize-iv=true \
+        ! udpsink host={} port={}",
+        source,
+        config.width,
+        config.height,
+        config.framerate,
+        config.bitrate,
+        config.key,
+        config.key, // Using key as IV for parity with gst.sh if IV not specified
+        dest,
+        port
+    )
+}
+
+pub fn build_receive_pipeline(config: &Config, listen: &str, port: u16) -> String {
+    format!(
+        "udpsrc address={} port={} \
+        ! application/x-rtp,media=(string)video,clock-rate=(int)90000,encoding-name=(string)H264 \
+        ! aesdec key={} iv={} per-buffer-padding=true serialize-iv=true \
+        ! rtph264depay \
+        ! decodebin \
+        ! queue \
+        ! autovideosink sync=false",
+        listen, port, config.key, config.key
+    )
+}
+
 pub fn run_record_pipeline(config: &Config) -> Result<()> {
     let pipeline_str = build_record_pipeline(config);
     run_pipeline(&pipeline_str)
@@ -57,12 +100,14 @@ pub fn run_play_pipeline(config: &Config, input_file: &str) -> Result<()> {
     run_pipeline(&pipeline_str)
 }
 
-pub fn run_stream_pipeline(_config: &Config, _dest: &str, _port: u16) -> Result<()> {
-    unimplemented!("Streaming not implemented yet")
+pub fn run_stream_pipeline(config: &Config, dest: &str, port: u16) -> Result<()> {
+    let pipeline_str = build_stream_pipeline(config, dest, port);
+    run_pipeline(&pipeline_str)
 }
 
-pub fn run_receive_pipeline(_config: &Config, _listen: &str, _port: u16) -> Result<()> {
-    unimplemented!("Receiving not implemented yet")
+pub fn run_receive_pipeline(config: &Config, listen: &str, port: u16) -> Result<()> {
+    let pipeline_str = build_receive_pipeline(config, listen, port);
+    run_pipeline(&pipeline_str)
 }
 
 // RAII Guard for the pipeline
@@ -242,6 +287,63 @@ mod tests {
             ! filesink location=live.ts.enc";
 
         let actual = build_record_pipeline(&config);
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn test_build_stream_pipeline() {
+        let config = Config {
+            device: "/dev/video4".to_string(),
+            width: 640,
+            height: 480,
+            framerate: "30/1".to_string(),
+            bitrate: 1000,
+            key: "00112233445566778899aabbccddeeff".to_string(),
+            iv: "unused".to_string(),
+            output_path: PathBuf::from("unused.enc"),
+        };
+
+        let dest = "127.0.0.1";
+        let port = 8088;
+        let expected = "v4l2src device=/dev/video4 \
+            ! video/x-raw,width=640,height=480,framerate=30/1 \
+            ! videoconvert \
+            ! video/x-raw,format=I420 \
+            ! queue \
+            ! x264enc tune=zerolatency speed-preset=ultrafast bitrate=1000 \
+            ! rtph264pay config-interval=1 mtu=1400 \
+            ! queue \
+            ! aesenc key=00112233445566778899aabbccddeeff iv=00112233445566778899aabbccddeeff per-buffer-padding=true serialize-iv=true \
+            ! udpsink host=127.0.0.1 port=8088";
+
+        let actual = build_stream_pipeline(&config, dest, port);
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn test_build_receive_pipeline() {
+        let config = Config {
+            device: "auto".to_string(),
+            width: 640,
+            height: 480,
+            framerate: "30/1".to_string(),
+            bitrate: 1000,
+            key: "00112233445566778899aabbccddeeff".to_string(),
+            iv: "unused".to_string(),
+            output_path: PathBuf::from("unused.enc"),
+        };
+
+        let listen = "0.0.0.0";
+        let port = 8088;
+        let expected = "udpsrc address=0.0.0.0 port=8088 \
+            ! application/x-rtp,media=(string)video,clock-rate=(int)90000,encoding-name=(string)H264 \
+            ! aesdec key=00112233445566778899aabbccddeeff iv=00112233445566778899aabbccddeeff per-buffer-padding=true serialize-iv=true \
+            ! rtph264depay \
+            ! decodebin \
+            ! queue \
+            ! autovideosink sync=false";
+
+        let actual = build_receive_pipeline(&config, listen, port);
         assert_eq!(actual, expected);
     }
 
