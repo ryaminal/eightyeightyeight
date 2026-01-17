@@ -8,7 +8,7 @@
     - [x] Update `src/main.rs` to dispatch these subcommands.
 - [x] Task: Conductor - User Manual Verification 'CLI and Configuration' (Protocol in workflow.md) 44bcd3e
 
-## Phase 2: Pipeline Implementation
+## Phase 2: Pipeline Implementation [checkpoint: ef33ea2]
 
 - [x] Task: Implement Streaming Pipeline Builder 893ef43
     - [x] Add `build_stream_pipeline` to `src/pipeline.rs`.
@@ -22,7 +22,7 @@
     - [x] Add unit tests for the pipeline string.
 - [x] Task: Implement Network Runners 893ef43
     - [x] Add `run_stream_pipeline` and `run_receive_pipeline` to `src/pipeline.rs`.
-- [~] Task: Conductor - User Manual Verification 'Pipeline Implementation' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Pipeline Implementation' (Protocol in workflow.md) ef33ea2
 
 ## Phase 3: Integration & Documentation
 
