@@ -3,6 +3,7 @@ use tracing::{info, error};
 
 mod config;
 mod cli;
+mod pipeline;
 
 fn main() -> anyhow::Result<()> {
     // Initialize tracing
