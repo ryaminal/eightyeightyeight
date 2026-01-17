@@ -1,4 +1,8 @@
 use crate::config::Config;
+use gstreamer as gst;
+use gstreamer::prelude::*;
+use anyhow::{Context, Result};
+use tracing::{info, error};
 
 pub fn build_record_pipeline(config: &Config) -> String {
     format!(
@@ -25,13 +29,69 @@ pub fn build_record_pipeline(config: &Config) -> String {
     )
 }
 
+pub fn run_record_pipeline(config: &Config) -> Result<()> {
+    gst::init().context("Failed to initialize GStreamer")?;
+
+    let pipeline_str = build_record_pipeline(config);
+    info!("Pipeline: {}", pipeline_str);
+
+    let pipeline = gst::parse::launch(&pipeline_str)
+        .context("Failed to parse pipeline")?
+        .dynamic_cast::<gst::Pipeline>()
+        .map_err(|_| anyhow::anyhow!("Element is not a pipeline"))?;
+
+    pipeline
+        .set_state(gst::State::Playing)
+        .context("Failed to set pipeline to playing")?;
+
+    let bus = pipeline
+        .bus()
+        .context("Pipeline has no bus")?;
+
+    for msg in bus.iter_timed(gst::ClockTime::NONE) {
+        use gst::MessageView;
+
+        match msg.view() {
+            MessageView::Eos(..) => {
+                info!("End of stream");
+                break;
+            }
+            MessageView::Error(err) => {
+                error!(
+                    "Error from {:?}: {} ({:?})",
+                    msg.src().map(|s| s.path_string()),
+                    err.error(),
+                    err.debug()
+                );
+                return Err(anyhow::anyhow!("GStreamer error: {}", err.error()));
+            }
+            _ => (),
+        }
+    }
+
+    pipeline
+        .set_state(gst::State::Null)
+        .context("Failed to set pipeline to null")?;
+
+    Ok(())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
     use std::path::PathBuf;
 
     #[test]
+    fn test_pipeline_parse() {
+        gst::init().unwrap();
+        let pipeline_str = "videotestsrc num-buffers=10 ! fakesink";
+        let res = gst::parse::launch(pipeline_str);
+        assert!(res.is_ok());
+    }
+
+    #[test]
     fn test_build_record_pipeline() {
+        // ... (previous test content)
         let config = Config {
             device: "/dev/video4".to_string(),
             width: 640,

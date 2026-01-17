@@ -26,5 +26,8 @@ fn main() -> anyhow::Result<()> {
 
     info!("Configuration loaded successfully. Device: {}", config.device);
 
+    // Run the pipeline
+    pipeline::run_record_pipeline(&config)?;
+
     Ok(())
 }
