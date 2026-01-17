@@ -11,14 +11,14 @@
 
 ## Phase 2: Playback Pipeline Implementation
 
-- [ ] Task: Implement Playback Pipeline Builder
-    - [ ] Update `src/pipeline.rs` to include `build_play_pipeline(config: &Config, input_file: &Path)`.
-    - [ ] Implement the GStreamer string construction for `filesrc ! aesdec ! ... ! autovideosink`.
-    - [ ] Add unit tests to verify the pipeline string matches `gst.sh play` logic.
-- [ ] Task: Implement Playback Runner
-    - [ ] Update `src/pipeline.rs` to include `run_play_pipeline`.
-    - [ ] Reuse or refactor the existing GStreamer bus loop to handle both record and play events (or create a shared helper).
-- [ ] Task: Conductor - User Manual Verification 'Playback Pipeline Implementation' (Protocol in workflow.md)
+- [x] Task: Implement Playback Pipeline Builder 2be722f
+    - [x] Update `src/pipeline.rs` to include `build_play_pipeline(config: &Config, input_file: &Path)`.
+    - [x] Implement the GStreamer string construction for `filesrc ! aesdec ! ... ! autovideosink`.
+    - [x] Add unit tests to verify the pipeline string matches `gst.sh play` logic.
+- [x] Task: Implement Playback Runner 27074c7
+    - [x] Update `src/pipeline.rs` to include `run_play_pipeline`.
+    - [x] Reuse or refactor the existing GStreamer bus loop to handle both record and play events (or create a shared helper).
+- [~] Task: Conductor - User Manual Verification 'Playback Pipeline Implementation' (Protocol in workflow.md)
 
 ## Phase 3: Integration & Verification
 
