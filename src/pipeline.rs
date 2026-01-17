@@ -111,13 +111,11 @@ pub fn run_receive_pipeline(config: &Config, listen: &str, port: u16) -> Result<
 }
 
 // RAII Guard for the pipeline
-
 struct PipelineGuard(gst::Pipeline);
 
 impl Drop for PipelineGuard {
     fn drop(&mut self) {
         info!("Setting pipeline state to NULL");
-
         let _ = self.0.set_state(gst::State::Null);
     }
 }
@@ -128,7 +126,7 @@ fn run_pipeline(pipeline_str: &str) -> Result<()> {
     info!("Pipeline: {}", pipeline_str);
 
     let pipeline = gst::parse::launch(pipeline_str)
-        .context("Failed to parse pipeline")?
+        .context("Failed to parse pipeline")? 
         .dynamic_cast::<gst::Pipeline>()
         .map_err(|_| anyhow::anyhow!("Element is not a pipeline"))?;
 
@@ -137,25 +135,19 @@ fn run_pipeline(pipeline_str: &str) -> Result<()> {
         .context("Failed to set pipeline to playing")?;
 
     // Create the guard *after* we set state to Playing (or Ready)
-
     // so it cleans up when this function exits (success or failure).
-
     let _guard = PipelineGuard(pipeline.clone());
 
     let bus = pipeline.bus().context("Pipeline has no bus")?;
 
     // Handle Ctrl+C
-
     let pipeline_weak = pipeline.downgrade();
-
     ctrlc::set_handler(move || {
         info!("Ctrl+C detected, sending EOS...");
-
         if let Some(pipeline) = pipeline_weak.upgrade() {
             pipeline.send_event(gst::event::Eos::new());
         }
-    })
-    .context("Error setting Ctrl-C handler")?;
+    }).context("Error setting Ctrl-C handler")?;
 
     for msg in bus.iter_timed(gst::ClockTime::NONE) {
         use gst::MessageView;
@@ -163,16 +155,12 @@ fn run_pipeline(pipeline_str: &str) -> Result<()> {
         match msg.view() {
             MessageView::Eos(..) => {
                 info!("End of stream received");
-
                 break;
             }
-
             MessageView::Error(err) => {
                 let error_msg = err.error().message().to_string();
-
                 if error_msg.contains("Output window was closed") {
                     info!("Playback stopped by user (Window closed)");
-
                     break;
                 }
 
@@ -182,22 +170,19 @@ fn run_pipeline(pipeline_str: &str) -> Result<()> {
                     err.error(),
                     err.debug()
                 );
-
                 // Return error here; _guard will be dropped and set state to Null
-
                 return Err(anyhow::anyhow!("GStreamer error: {}", err.error()));
             }
-
             _ => (),
         }
     }
 
     // Success path: _guard will be dropped here too
-
     info!("Shutting down pipeline...");
-
+    
     Ok(())
 }
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -212,7 +197,6 @@ mod tests {
             framerate: "30/1".to_string(),
             bitrate: 1000,
             key: "00112233445566778899aabbccddeeff".to_string(),
-            iv: "unused".to_string(),
             output_path: PathBuf::from("live.ts.enc"),
         };
 
@@ -243,7 +227,6 @@ mod tests {
             framerate: "30/1".to_string(),
             bitrate: 1000,
             key: "00112233445566778899aabbccddeeff".to_string(),
-            iv: "unused".to_string(),
             output_path: PathBuf::from("unused.enc"),
         };
 
@@ -268,7 +251,6 @@ mod tests {
             framerate: "30/1".to_string(),
             bitrate: 1000,
             key: "00112233445566778899aabbccddeeff".to_string(),
-            iv: "unused".to_string(),
             output_path: PathBuf::from("live.ts.enc"),
         };
 
@@ -299,7 +281,6 @@ mod tests {
             framerate: "30/1".to_string(),
             bitrate: 1000,
             key: "00112233445566778899aabbccddeeff".to_string(),
-            iv: "unused".to_string(),
             output_path: PathBuf::from("unused.enc"),
         };
 
@@ -329,7 +310,6 @@ mod tests {
             framerate: "30/1".to_string(),
             bitrate: 1000,
             key: "00112233445566778899aabbccddeeff".to_string(),
-            iv: "unused".to_string(),
             output_path: PathBuf::from("unused.enc"),
         };
 

@@ -9,7 +9,6 @@ pub struct Config {
     pub framerate: String,
     pub bitrate: u32,
     pub key: String,
-    pub iv: String,
     pub output_path: PathBuf,
 }
 
@@ -35,7 +34,6 @@ mod tests {
             framerate = "60/1"
             bitrate = 5000
             key = "00000000000000000000000000000000"
-            iv = "11111111111111111111111111111111"
             output_path = "output.ts.enc"
         "#;
 
@@ -47,7 +45,6 @@ mod tests {
         assert_eq!(config.framerate, "60/1");
         assert_eq!(config.bitrate, 5000);
         assert_eq!(config.key, "00000000000000000000000000000000");
-        assert_eq!(config.iv, "11111111111111111111111111111111");
         assert_eq!(config.output_path, PathBuf::from("output.ts.enc"));
     }
 
@@ -60,7 +57,6 @@ mod tests {
             framerate = "30/1"
             bitrate = 2500
             key = "12345678901234561234567890123456"
-            iv = "12345678901234561234567890123456"
             output_path = "test_output.ts.enc"
         "#;
 
