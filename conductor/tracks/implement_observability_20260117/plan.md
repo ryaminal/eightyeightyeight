@@ -18,9 +18,9 @@
     - [x] For simplicity/MVP: Log "Metrics: FPS=30.0, Bitrate=1024kbps" every 5 seconds.
 - [x] Task: Conductor - User Manual Verification 'Pipeline Instrumentation' (Protocol in workflow.md) fcd89d6
 
-## Phase 3: Integration & Verification
+## Phase 3: Integration & Verification [checkpoint: 561366e]
 
-- [ ] Task: Verify Metrics Output
-    - [ ] Run `record` and check logs for metric updates.
-    - [ ] Verify overhead is minimal.
-- [ ] Task: Conductor - User Manual Verification 'Integration & Verification' (Protocol in workflow.md)
+- [x] Task: Verify Metrics Output 8eb5fa1
+    - [x] Run `record` and check logs for metric updates.
+    - [x] Verify overhead is minimal.
+- [x] Task: Conductor - User Manual Verification 'Integration & Verification' (Protocol in workflow.md) 561366e
