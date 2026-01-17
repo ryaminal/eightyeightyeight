@@ -1,0 +1,8 @@
+{
+  "track_id": "handle_window_closed_error_20260117",
+  "type": "fix",
+  "status": "new",
+  "created_at": "2026-01-16T23:30:00Z",
+  "updated_at": "2026-01-16T23:30:00Z",
+  "description": "Treat 'Output window was closed' as a normal shutdown event."
+}
