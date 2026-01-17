@@ -36,11 +36,11 @@
 
 ## Phase 3: Encryption Integration & Verification
 
-- [ ] Task: Validate Encryption Logic
-    - [ ] Ensure the pipeline uses `aesenc` with the configured Key/IV.
-    - [ ] Verify that the `key` and `iv` from config are correctly formatted (hex string) and passed to the element.
-- [ ] Task: End-to-End Test (Manual)
-    - [ ] Run the Rust app to record a 10-second clip.
-    - [ ] Use `gst.sh play` (from the original script) to try and decrypt/play the Rust-generated file.
-    - [ ] Verify that the video plays correctly.
-- [ ] Task: Conductor - User Manual Verification 'Encryption Integration & Verification' (Protocol in workflow.md)
+- [x] Task: Validate Encryption Logic 74f993d
+    - [x] Ensure the pipeline uses `aesenc` with the configured Key/IV.
+    - [x] Verify that the `key` and `iv` from config are correctly formatted (hex string) and passed to the element.
+- [x] Task: End-to-End Test (Manual) 74f993d
+    - [x] Run the Rust app to record a 10-second clip.
+    - [x] Use `gst.sh play` (from the original script) to try and decrypt/play the Rust-generated file.
+    - [x] Verify that the video plays correctly.
+- [~] Task: Conductor - User Manual Verification 'Encryption Integration & Verification' (Protocol in workflow.md)
