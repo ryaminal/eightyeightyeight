@@ -23,12 +23,12 @@
     - [x] Create `src/pipeline.rs`.
     - [x] Implement a builder function that constructs the GStreamer pipeline string dynamically from the `Config` struct (similar to how `gst.sh` does string concatenation).
     - [x] Write a test that asserts the generated pipeline string matches the expected format from `gst.sh`.
-- [~] Task: Initialize and Start Pipeline
-    - [ ] In `src/main.rs` (or `pipeline.rs`), initialize GStreamer (`gst::init`).
-    - [ ] Parse the pipeline string into a `gst::Pipeline` object.
-    - [ ] Set the pipeline state to `Playing`.
-    - [ ] Implement a basic "bus watch" loop to handle messages (Error, EOS).
-- [ ] Task: Handle Graceful Shutdown
+- [x] Task: Initialize and Start Pipeline 1dd862b
+    - [x] In `src/main.rs` (or `pipeline.rs`), initialize GStreamer (`gst::init`).
+    - [x] Parse the pipeline string into a `gst::Pipeline` object.
+    - [x] Set the pipeline state to `Playing`.
+    - [x] Implement a basic "bus watch" loop to handle messages (Error, EOS).
+- [~] Task: Handle Graceful Shutdown
     - [ ] Integrate `ctrlc` or `tokio::signal` to detect Ctrl+C.
     - [ ] On signal, send the EOS event to the pipeline.
     - [ ] Wait for the EOS message on the bus before setting state to `Null` (crucial for valid video files).
