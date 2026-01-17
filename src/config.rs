@@ -10,6 +10,8 @@ pub struct Config {
     pub bitrate: u32,
     pub key: String,
     pub output_path: PathBuf,
+    #[serde(default)]
+    pub cv_enabled: bool,
 }
 
 impl Config {
@@ -48,6 +50,7 @@ mod tests {
 
         let config = Config::load(file.path().to_str().unwrap()).expect("Failed to load config");
         assert_eq!(config.key, "resolved_secret_key");
+        assert_eq!(config.cv_enabled, false);
     }
 
     #[test]

@@ -11,10 +11,17 @@ pub fn build_record_pipeline(config: &Config) -> String {
         format!("v4l2src device={}", config.device)
     };
 
+    let cv_filter = if config.cv_enabled {
+        " ! videoconvert ! facedetect ! videoconvert"
+    } else {
+        ""
+    };
+
     format!(
         "{} \
         ! video/x-raw,width={},height={},framerate={} \
         ! videoconvert \
+        {} \
         ! video/x-raw,format=I420 \
         ! queue \
         ! x264enc tune=zerolatency speed-preset=ultrafast bitrate={} \
@@ -29,6 +36,7 @@ pub fn build_record_pipeline(config: &Config) -> String {
         config.width,
         config.height,
         config.framerate,
+        cv_filter,
         config.bitrate,
         config.key,
         config.output_path.display()
@@ -54,10 +62,16 @@ pub fn build_stream_pipeline(config: &Config, dest: &str, port: u16) -> String {
         format!("v4l2src device={}", config.device)
     };
 
+    let cv_filter = if config.cv_enabled {
+        " ! videoconvert ! facedetect ! videoconvert"
+    } else {
+        ""
+    };
+
     format!(
         "{} \
         ! video/x-raw,width={},height={},framerate={} \
-        ! videoconvert \
+        ! videoconvert{} \
         ! video/x-raw,format=I420 \
         ! queue \
         ! x264enc tune=zerolatency speed-preset=ultrafast bitrate={} \
@@ -69,6 +83,7 @@ pub fn build_stream_pipeline(config: &Config, dest: &str, port: u16) -> String {
         config.width,
         config.height,
         config.framerate,
+        cv_filter,
         config.bitrate,
         config.key,
         config.key, // Using key as IV for parity with gst.sh if IV not specified
@@ -227,11 +242,44 @@ mod tests {
             bitrate: 1000,
             key: "00112233445566778899aabbccddeeff".to_string(),
             output_path: PathBuf::from("live.ts.enc"),
+            cv_enabled: false,
         };
 
         let expected = "v4l2src device=/dev/video4 \
             ! video/x-raw,width=640,height=480,framerate=30/1 \
             ! videoconvert \
+             \
+            ! video/x-raw,format=I420 \
+            ! queue \
+            ! x264enc tune=zerolatency speed-preset=ultrafast bitrate=1000 \
+            ! queue \
+            ! h264parse \
+            ! mpegtsmux \
+            ! queue \
+            ! rndbuffersize min=4096 max=4096 \
+            ! aesenc key=00112233445566778899aabbccddeeff serialize-iv=true per-buffer-padding=false \
+            ! filesink location=live.ts.enc";
+
+        let actual = build_record_pipeline(&config);
+        assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn test_build_record_pipeline_with_cv() {
+        let config = Config {
+            device: "/dev/video4".to_string(),
+            width: 640,
+            height: 480,
+            framerate: "30/1".to_string(),
+            bitrate: 1000,
+            key: "00112233445566778899aabbccddeeff".to_string(),
+            output_path: PathBuf::from("live.ts.enc"),
+            cv_enabled: true,
+        };
+
+        let expected = "v4l2src device=/dev/video4 \
+            ! video/x-raw,width=640,height=480,framerate=30/1 \
+            ! videoconvert  ! videoconvert ! facedetect ! videoconvert \
             ! video/x-raw,format=I420 \
             ! queue \
             ! x264enc tune=zerolatency speed-preset=ultrafast bitrate=1000 \
@@ -257,6 +305,7 @@ mod tests {
             bitrate: 1000,
             key: "00112233445566778899aabbccddeeff".to_string(),
             output_path: PathBuf::from("unused.enc"),
+            cv_enabled: false,
         };
 
         let input_file = "test_video.enc";
@@ -281,11 +330,12 @@ mod tests {
             bitrate: 1000,
             key: "00112233445566778899aabbccddeeff".to_string(),
             output_path: PathBuf::from("live.ts.enc"),
+            cv_enabled: false,
         };
 
         let expected = "autovideosrc \
             ! video/x-raw,width=640,height=480,framerate=30/1 \
-            ! videoconvert \
+            ! videoconvert  \
             ! video/x-raw,format=I420 \
             ! queue \
             ! x264enc tune=zerolatency speed-preset=ultrafast bitrate=1000 \
@@ -311,6 +361,7 @@ mod tests {
             bitrate: 1000,
             key: "00112233445566778899aabbccddeeff".to_string(),
             output_path: PathBuf::from("unused.enc"),
+            cv_enabled: false,
         };
 
         let dest = "127.0.0.1";
@@ -318,6 +369,7 @@ mod tests {
         let expected = "v4l2src device=/dev/video4 \
             ! video/x-raw,width=640,height=480,framerate=30/1 \
             ! videoconvert \
+             \
             ! video/x-raw,format=I420 \
             ! queue \
             ! x264enc tune=zerolatency speed-preset=ultrafast bitrate=1000 \
@@ -340,6 +392,7 @@ mod tests {
             bitrate: 1000,
             key: "00112233445566778899aabbccddeeff".to_string(),
             output_path: PathBuf::from("unused.enc"),
+            cv_enabled: false,
         };
 
         let listen = "0.0.0.0";
