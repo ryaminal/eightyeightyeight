@@ -9,14 +9,14 @@
 
 ## Phase 2: Pipeline Instrumentation
 
-- [ ] Task: Implement Pad Probes
-    - [ ] Create `src/metrics.rs` to handle metric registration and updates.
-    - [ ] In `src/pipeline.rs`, attach probes to the `v4l2src` (source) and `filesink`/`udpsink` (sink) pads.
-    - [ ] Calculate FPS and Bitrate in the probe callback.
-- [ ] Task: Integrate Metrics Reporting
-    - [ ] Periodically log the collected metrics (or expose via Prometheus endpoint if we go that route).
-    - [ ] For simplicity/MVP: Log "Metrics: FPS=30.0, Bitrate=1024kbps" every 5 seconds.
-- [ ] Task: Conductor - User Manual Verification 'Pipeline Instrumentation' (Protocol in workflow.md)
+- [x] Task: Implement Pad Probes 8eb5fa1
+    - [x] Create `src/metrics.rs` to handle metric registration and updates.
+    - [x] In `src/pipeline.rs`, attach probes to the `v4l2src` (source) and `filesink`/`udpsink` (sink) pads.
+    - [x] Calculate FPS and Bitrate in the probe callback.
+- [x] Task: Integrate Metrics Reporting 8eb5fa1
+    - [x] Periodically log the collected metrics (or expose via Prometheus endpoint if we go that route).
+    - [x] For simplicity/MVP: Log "Metrics: FPS=30.0, Bitrate=1024kbps" every 5 seconds.
+- [~] Task: Conductor - User Manual Verification 'Pipeline Instrumentation' (Protocol in workflow.md)
 
 ## Phase 3: Integration & Verification
 
