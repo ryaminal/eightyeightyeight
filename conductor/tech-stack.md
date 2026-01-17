@@ -13,9 +13,9 @@
 - **Reasoning:** Enables a lightweight, responsive, and professional terminal-based interface for monitoring the capture pipeline without the overhead of a full GUI.
 
 ## Security & Encryption
-- **Library:** [RustCrypto](https://github.com/RustCrypto) (e.g., `aes-gcm`, `cbc`) or [`ring`](https://github.com/briansmith/ring)
+- **Library:** GStreamer `aes` elements (current port) with [RustCrypto](https://github.com/RustCrypto) planned for future utilities.
 - **Encryption Standard:** AES-256
-- **Reasoning:** Prioritizes modern, Rust-first implementations over OpenSSL to leverage Rust's safety guarantees and simplify cross-platform building/deployment.
+- **Reasoning:** Leverages proven GStreamer pipeline elements for the initial port to ensure compatibility with existing decryption logic. Future components will prioritize Rust-native crypto libraries.
 
 ## Observability
 - **Standard:** [OpenTelemetry](https://opentelemetry.io/)
