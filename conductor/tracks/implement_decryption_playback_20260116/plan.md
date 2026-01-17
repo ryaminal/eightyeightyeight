@@ -9,7 +9,7 @@
     - [x] Ensure backward compatibility or update documentation if breaking changes are made (likely breaking: `record` becomes explicit).
 - [x] Task: Conductor - User Manual Verification 'CLI Restructuring' (Protocol in workflow.md) cd274e0
 
-## Phase 2: Playback Pipeline Implementation
+## Phase 2: Playback Pipeline Implementation [checkpoint: 507ad01]
 
 - [x] Task: Implement Playback Pipeline Builder 2be722f
     - [x] Update `src/pipeline.rs` to include `build_play_pipeline(config: &Config, input_file: &Path)`.
@@ -18,7 +18,7 @@
 - [x] Task: Implement Playback Runner 27074c7
     - [x] Update `src/pipeline.rs` to include `run_play_pipeline`.
     - [x] Reuse or refactor the existing GStreamer bus loop to handle both record and play events (or create a shared helper).
-- [~] Task: Conductor - User Manual Verification 'Playback Pipeline Implementation' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Playback Pipeline Implementation' (Protocol in workflow.md) 507ad01
 
 ## Phase 3: Integration & Verification
 
