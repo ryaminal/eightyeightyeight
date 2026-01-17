@@ -42,7 +42,6 @@ height = 480
 framerate = "30/1"
 bitrate = 1000
 key = "00112233445566778899aabbccddeeff" # 32-byte hex key
-iv = "unused"
 output_path = "output.ts.enc"
 ```
 
@@ -83,3 +82,8 @@ You can stream encrypted video over the network (UDP/RTP).
 ## Architecture
 
 See [DESIGN.md](./DESIGN.md) for details on the system architecture and pipeline design.
+
+## Future Improvements
+
+- **Secure Key Management:** Integration with Kubernetes Secrets or Cloud KMS to avoid storing keys in plain text `config.toml`.
+- **Hardware Acceleration:** Support for hardware-specific encoding/decoding elements (e.g., `vaapih264enc`, `omxh264enc`).

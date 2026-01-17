@@ -52,7 +52,12 @@ output_path = "output.ts.enc"
 
 ## 4. Security
 - **Encryption:** AES (Advanced Encryption Standard) is used to encrypt the video stream.
-- **Key Management:** Keys are currently provided via the configuration file. In a production environment, integration with a secure key store (e.g., TPM, HSM) would be recommended.
+- **Key Management:** Keys are currently provided via the configuration file.
+    - **Production Readiness:** In a production environment, keys should NOT be stored in plain text configuration files.
+    - **Recommended Integration:** The application should be extended to fetch keys from a secure key store such as:
+        - Kubernetes Secrets (mounted as files or via API)
+        - AWS Secrets Manager / GCP Secret Manager
+        - Hardware Security Modules (TPM/HSM)
 - **Data Integrity:** The use of `mpegtsmux` and serialized IVs ensures that valid video data can be recovered up to the point of interruption (e.g., power loss).
 
 ## 5. Reliability
