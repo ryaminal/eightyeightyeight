@@ -11,7 +11,7 @@
 
 ## Phase 2: Documentation Updates
 
-- [ ] Task: Update Design and Readme
-    - [ ] Add "Secret Management" section to `DESIGN.md` discussing K8s/Cloud secrets.
-    - [ ] Add "Future Improvements" or similar note to `README.md` about external secret fetching.
-- [ ] Task: Conductor - User Manual Verification 'Documentation Updates' (Protocol in workflow.md)
+- [x] Task: Update Design and Readme b50ba39
+    - [x] Add "Secret Management" section to `DESIGN.md` discussing K8s/Cloud secrets.
+    - [x] Add "Future Improvements" or similar note to `README.md` about external secret fetching.
+- [~] Task: Conductor - User Manual Verification 'Documentation Updates' (Protocol in workflow.md)
