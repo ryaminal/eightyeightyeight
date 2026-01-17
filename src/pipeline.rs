@@ -48,12 +48,22 @@ pub fn run_record_pipeline(config: &Config) -> Result<()> {
         .bus()
         .context("Pipeline has no bus")?;
 
+    // Handle Ctrl+C
+    let pipeline_weak = pipeline.downgrade();
+    ctrlc::set_handler(move || {
+        info!("Ctrl+C detected, sending EOS...");
+        if let Some(pipeline) = pipeline_weak.upgrade() {
+            pipeline.send_event(gst::event::Eos::new());
+        }
+    })
+    .context("Error setting Ctrl-C handler")?;
+
     for msg in bus.iter_timed(gst::ClockTime::NONE) {
         use gst::MessageView;
 
         match msg.view() {
             MessageView::Eos(..) => {
-                info!("End of stream");
+                info!("End of stream received");
                 break;
             }
             MessageView::Error(err) => {
@@ -69,6 +79,7 @@ pub fn run_record_pipeline(config: &Config) -> Result<()> {
         }
     }
 
+    info!("Shutting down pipeline...");
     pipeline
         .set_state(gst::State::Null)
         .context("Failed to set pipeline to null")?;
