@@ -37,7 +37,7 @@ fn main() -> anyhow::Result<()> {
         }
         cli::Commands::Play { config, input } => {
             info!("Loading configuration from: {}", config);
-            let _config = match config::Config::load(&config) {
+            let config = match config::Config::load(&config) {
                 Ok(c) => c,
                 Err(e) => {
                     error!("Failed to load configuration: {}", e);
@@ -45,8 +45,7 @@ fn main() -> anyhow::Result<()> {
                 }
             };
             info!("Playing back file: {}", input);
-            // TODO: Implement playback pipeline
-            unimplemented!("Playback not implemented yet");
+            pipeline::run_play_pipeline(&config, &input)?;
         }
     }
 
