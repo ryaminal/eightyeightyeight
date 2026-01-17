@@ -28,11 +28,11 @@
     - [x] Parse the pipeline string into a `gst::Pipeline` object.
     - [x] Set the pipeline state to `Playing`.
     - [x] Implement a basic "bus watch" loop to handle messages (Error, EOS).
-- [~] Task: Handle Graceful Shutdown
-    - [ ] Integrate `ctrlc` or `tokio::signal` to detect Ctrl+C.
-    - [ ] On signal, send the EOS event to the pipeline.
-    - [ ] Wait for the EOS message on the bus before setting state to `Null` (crucial for valid video files).
-- [ ] Task: Conductor - User Manual Verification 'Core GStreamer Pipeline Implementation' (Protocol in workflow.md)
+- [x] Task: Handle Graceful Shutdown 74f993d
+    - [x] Integrate `ctrlc` or `tokio::signal` to detect Ctrl+C.
+    - [x] On signal, send the EOS event to the pipeline.
+    - [x] Wait for the EOS message on the bus before setting state to `Null` (crucial for valid video files).
+- [~] Task: Conductor - User Manual Verification 'Core GStreamer Pipeline Implementation' (Protocol in workflow.md)
 
 ## Phase 3: Encryption Integration & Verification
 
