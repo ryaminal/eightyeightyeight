@@ -1,8 +1,8 @@
 use clap::Parser;
-use tracing::{info, error};
+use tracing::{error, info};
 
-mod config;
 mod cli;
+mod config;
 mod pipeline;
 
 fn main() -> anyhow::Result<()> {
@@ -13,21 +13,42 @@ fn main() -> anyhow::Result<()> {
     let args = cli::Args::parse();
 
     info!("Starting eightyeightyeight...");
-    info!("Loading configuration from: {}", args.config);
 
-    // Load configuration
-    let config = match config::Config::load(&args.config) {
-        Ok(c) => c,
-        Err(e) => {
-            error!("Failed to load configuration: {}", e);
-            return Err(e);
+    match args.command {
+        cli::Commands::Record { config } => {
+            info!("Loading configuration from: {}", config);
+
+            // Load configuration
+            let config = match config::Config::load(&config) {
+                Ok(c) => c,
+                Err(e) => {
+                    error!("Failed to load configuration: {}", e);
+                    return Err(e);
+                }
+            };
+
+            info!(
+                "Configuration loaded successfully. Device: {}",
+                config.device
+            );
+
+            // Run the pipeline
+            pipeline::run_record_pipeline(&config)?;
         }
-    };
-
-    info!("Configuration loaded successfully. Device: {}", config.device);
-
-    // Run the pipeline
-    pipeline::run_record_pipeline(&config)?;
+        cli::Commands::Play { config, input } => {
+            info!("Loading configuration from: {}", config);
+            let _config = match config::Config::load(&config) {
+                Ok(c) => c,
+                Err(e) => {
+                    error!("Failed to load configuration: {}", e);
+                    return Err(e);
+                }
+            };
+            info!("Playing back file: {}", input);
+            // TODO: Implement playback pipeline
+            unimplemented!("Playback not implemented yet");
+        }
+    }
 
     Ok(())
 }

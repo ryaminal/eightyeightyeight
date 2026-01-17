@@ -1,0 +1,2 @@
+- Always run `cargo fmt` and `cargo clippy -- -D warnings` before marking a task or step as completed.
+- Ensure thorough understanding of legacy scripts (like `gst.sh`) before implementing their replacements.
