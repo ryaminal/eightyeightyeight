@@ -29,10 +29,10 @@
     - [ ] Update `build_record_pipeline` to switch between `v4l2src` and `autovideosrc`.
     - [ ] Update tests to cover the auto source case.
 
-## Phase 4: Integration & Verification
+## Phase 4: Integration & Verification [checkpoint: 4266e1e]
 
-- [ ] Task: End-to-End Verification
-    - [ ] Record a short clip using `eightyeightyeight record`.
-    - [ ] Play back the clip using `eightyeightyeight play`.
-    - [ ] Verify that the video renders correctly.
-- [ ] Task: Conductor - User Manual Verification 'Integration & Verification' (Protocol in workflow.md)
+- [x] Task: End-to-End Verification 253353f
+    - [x] Record a short clip using `eightyeightyeight record`.
+    - [x] Play back the clip using `eightyeightyeight play`.
+    - [x] Verify that the video renders correctly.
+- [x] Task: Conductor - User Manual Verification 'Integration & Verification' (Protocol in workflow.md) 253353f
