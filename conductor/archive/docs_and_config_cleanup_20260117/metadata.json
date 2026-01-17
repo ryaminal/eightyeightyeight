@@ -1,0 +1,8 @@
+{
+  "track_id": "docs_and_config_cleanup_20260117",
+  "type": "chore",
+  "status": "new",
+  "created_at": "2026-01-16T21:00:00Z",
+  "updated_at": "2026-01-16T21:00:00Z",
+  "description": "Update documentation (README, DESIGN) and standardize ports to 8088."
+}
