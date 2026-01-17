@@ -1,8 +1,8 @@
 use crate::config::Config;
+use anyhow::{Context, Result};
 use gstreamer as gst;
 use gstreamer::prelude::*;
-use anyhow::{Context, Result};
-use tracing::{info, error};
+use tracing::{error, info};
 
 pub fn build_record_pipeline(config: &Config) -> String {
     format!(
@@ -44,9 +44,7 @@ pub fn run_record_pipeline(config: &Config) -> Result<()> {
         .set_state(gst::State::Playing)
         .context("Failed to set pipeline to playing")?;
 
-    let bus = pipeline
-        .bus()
-        .context("Pipeline has no bus")?;
+    let bus = pipeline.bus().context("Pipeline has no bus")?;
 
     // Handle Ctrl+C
     let pipeline_weak = pipeline.downgrade();

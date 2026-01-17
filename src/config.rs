@@ -63,16 +63,16 @@ mod tests {
             iv = "12345678901234561234567890123456"
             output_path = "test_output.ts.enc"
         "#;
-        
+
         let file_path = "test_config.toml";
         let mut file = std::fs::File::create(file_path).unwrap();
         file.write_all(toml_str.as_bytes()).unwrap();
 
         let config = Config::load(file_path).expect("Failed to load config file");
-        
+
         assert_eq!(config.device, "/dev/video_test");
         assert_eq!(config.width, 1280);
-        
+
         // Cleanup
         let _ = std::fs::remove_file(file_path);
     }
