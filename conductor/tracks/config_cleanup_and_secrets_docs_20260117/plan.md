@@ -9,9 +9,9 @@
     - [x] Fix all compilation errors and update unit tests.
 - [x] Task: Conductor - User Manual Verification 'Remove Unused IV' (Protocol in workflow.md) cddbaf2
 
-## Phase 2: Documentation Updates
+## Phase 2: Documentation Updates [checkpoint: 51cf70c]
 
 - [x] Task: Update Design and Readme b50ba39
     - [x] Add "Secret Management" section to `DESIGN.md` discussing K8s/Cloud secrets.
     - [x] Add "Future Improvements" or similar note to `README.md` about external secret fetching.
-- [~] Task: Conductor - User Manual Verification 'Documentation Updates' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Documentation Updates' (Protocol in workflow.md) 51cf70c
