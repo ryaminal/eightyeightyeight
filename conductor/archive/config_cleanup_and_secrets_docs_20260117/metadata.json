@@ -1,0 +1,8 @@
+{
+  "track_id": "config_cleanup_and_secrets_docs_20260117",
+  "type": "chore",
+  "status": "new",
+  "created_at": "2026-01-17T00:00:00Z",
+  "updated_at": "2026-01-17T00:00:00Z",
+  "description": "Remove unused IV from config and document secret management."
+}
