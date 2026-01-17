@@ -1,2 +1,3 @@
 - Always run `cargo fmt` and `cargo clippy -- -D warnings` before marking a task or step as completed.
 - Ensure thorough understanding of legacy scripts (like `gst.sh`) before implementing their replacements.
+- Use `timeout <duration>` when running shell commands that are expected to block or run indefinitely (e.g., `cargo run` for a server or pipeline).
