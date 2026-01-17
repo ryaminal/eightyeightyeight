@@ -4,6 +4,4 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-- [x] **Track: Implement `stream` and `receive` subcommands for networked encrypted video.**
-  *Link: [./tracks/implement_streaming_receiving_20260117/](./tracks/implement_streaming_receiving_20260117/)*
 

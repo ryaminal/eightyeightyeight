@@ -1,0 +1,8 @@
+{
+  "track_id": "implement_streaming_receiving_20260117",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-01-16T23:45:00Z",
+  "updated_at": "2026-01-16T23:45:00Z",
+  "description": "Implement `stream` and `receive` subcommands for networked encrypted video."
+}
