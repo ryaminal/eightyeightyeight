@@ -4,6 +4,6 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-- [~] **Track: Implement a `play` subcommand to decrypt and playback video files.**
+- [x] **Track: Implement a `play` subcommand to decrypt and playback video files.**
   *Link: [./tracks/implement_decryption_playback_20260116/](./tracks/implement_decryption_playback_20260116/)*
 
