@@ -10,19 +10,19 @@
 
 ## Phase 2: Pipeline Implementation
 
-- [ ] Task: Implement Streaming Pipeline Builder
-    - [ ] Add `build_stream_pipeline` to `src/pipeline.rs`.
-    - [ ] Use `rtph264pay` and `udpsink`.
-    - [ ] Ensure `aesenc` settings match `gst.sh stream` (`per-buffer-padding=true`).
-    - [ ] Add unit tests for the pipeline string.
-- [ ] Task: Implement Receiving Pipeline Builder
-    - [ ] Add `build_receive_pipeline` to `src/pipeline.rs`.
-    - [ ] Use `udpsrc` and `rtph264depay`.
-    - [ ] Ensure `aesdec` settings match `gst.sh receive`.
-    - [ ] Add unit tests for the pipeline string.
-- [ ] Task: Implement Network Runners
-    - [ ] Add `run_stream_pipeline` and `run_receive_pipeline` to `src/pipeline.rs`.
-- [ ] Task: Conductor - User Manual Verification 'Pipeline Implementation' (Protocol in workflow.md)
+- [x] Task: Implement Streaming Pipeline Builder 893ef43
+    - [x] Add `build_stream_pipeline` to `src/pipeline.rs`.
+    - [x] Use `rtph264pay` and `udpsink`.
+    - [x] Ensure `aesenc` settings match `gst.sh stream` (`per-buffer-padding=true`).
+    - [x] Add unit tests for the pipeline string.
+- [x] Task: Implement Receiving Pipeline Builder 893ef43
+    - [x] Add `build_receive_pipeline` to `src/pipeline.rs`.
+    - [x] Use `udpsrc` and `rtph264depay`.
+    - [x] Ensure `aesdec` settings match `gst.sh receive`.
+    - [x] Add unit tests for the pipeline string.
+- [x] Task: Implement Network Runners 893ef43
+    - [x] Add `run_stream_pipeline` and `run_receive_pipeline` to `src/pipeline.rs`.
+- [~] Task: Conductor - User Manual Verification 'Pipeline Implementation' (Protocol in workflow.md)
 
 ## Phase 3: Integration & Documentation
 
