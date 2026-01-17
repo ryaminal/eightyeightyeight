@@ -17,7 +17,7 @@
     - [x] Verify CLI accepts arguments and logs startup messages.
 - [x] Task: Conductor - User Manual Verification 'Project Scaffolding & Configuration' (Protocol in workflow.md) de0422a
 
-## Phase 2: Core GStreamer Pipeline Implementation
+## Phase 2: Core GStreamer Pipeline Implementation [checkpoint: e777a2a]
 
 - [x] Task: Construct the Record Pipeline 2be722f
     - [x] Create `src/pipeline.rs`.
@@ -32,7 +32,7 @@
     - [x] Integrate `ctrlc` or `tokio::signal` to detect Ctrl+C.
     - [x] On signal, send the EOS event to the pipeline.
     - [x] Wait for the EOS message on the bus before setting state to `Null` (crucial for valid video files).
-- [~] Task: Conductor - User Manual Verification 'Core GStreamer Pipeline Implementation' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Core GStreamer Pipeline Implementation' (Protocol in workflow.md) e777a2a
 
 ## Phase 3: Encryption Integration & Verification
 
