@@ -24,6 +24,30 @@ pub enum Commands {
         #[arg(short, long)]
         input: String,
     },
+    /// Stream encrypted video over the network
+    Stream {
+        /// Path to the configuration file
+        #[arg(short, long, default_value = "config.toml")]
+        config: String,
+        /// Destination IP address
+        #[arg(short, long, default_value = "127.0.0.1")]
+        dest: String,
+        /// Destination port
+        #[arg(short, long, default_value = "8088")]
+        port: u16,
+    },
+    /// Receive and decrypt video from the network
+    Receive {
+        /// Path to the configuration file (for decryption keys)
+        #[arg(short, long, default_value = "config.toml")]
+        config: String,
+        /// Listen IP address
+        #[arg(short, long, default_value = "0.0.0.0")]
+        listen: String,
+        /// Listen port
+        #[arg(short, long, default_value = "8088")]
+        port: u16,
+    },
 }
 
 #[cfg(test)]
@@ -55,6 +79,54 @@ mod tests {
                 assert_eq!(input, "video.enc");
             }
             _ => panic!("Expected Play command"),
+        }
+    }
+
+    #[test]
+    fn test_stream_command() {
+        let args = Args::parse_from(&[
+            "app",
+            "stream",
+            "--dest",
+            "192.168.1.10",
+            "--port",
+            "9000",
+            "--config",
+            "stream_config.toml",
+        ]);
+        match args.command {
+            Commands::Stream { config, dest, port } => {
+                assert_eq!(config, "stream_config.toml");
+                assert_eq!(dest, "192.168.1.10");
+                assert_eq!(port, 9000);
+            }
+            _ => panic!("Expected Stream command"),
+        }
+    }
+
+    #[test]
+    fn test_receive_command() {
+        let args = Args::parse_from(&[
+            "app",
+            "receive",
+            "--listen",
+            "127.0.0.1",
+            "--port",
+            "9001",
+            "--config",
+            "recv_config.toml",
+        ]);
+        match args.command {
+            Commands::Receive {
+                config,
+                listen,
+                port,
+            } => {
+                assert_eq!(config, "recv_config.toml");
+                assert_eq!(listen, "127.0.0.1");
+                assert_eq!(port, 9001);
+            }
+            _ => panic!("Expected Receive command"),
         }
     }
 }

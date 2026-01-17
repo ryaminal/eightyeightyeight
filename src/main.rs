@@ -47,6 +47,34 @@ fn main() -> anyhow::Result<()> {
             info!("Playing back file: {}", input);
             pipeline::run_play_pipeline(&config, &input)?;
         }
+        cli::Commands::Stream { config, dest, port } => {
+            info!("Loading configuration from: {}", config);
+            let config = match config::Config::load(&config) {
+                Ok(c) => c,
+                Err(e) => {
+                    error!("Failed to load configuration: {}", e);
+                    return Err(e);
+                }
+            };
+            info!("Streaming to {}:{}", dest, port);
+            pipeline::run_stream_pipeline(&config, &dest, port)?;
+        }
+        cli::Commands::Receive {
+            config,
+            listen,
+            port,
+        } => {
+            info!("Loading configuration from: {}", config);
+            let config = match config::Config::load(&config) {
+                Ok(c) => c,
+                Err(e) => {
+                    error!("Failed to load configuration: {}", e);
+                    return Err(e);
+                }
+            };
+            info!("Receiving on {}:{}", listen, port);
+            pipeline::run_receive_pipeline(&config, &listen, port)?;
+        }
     }
 
     Ok(())

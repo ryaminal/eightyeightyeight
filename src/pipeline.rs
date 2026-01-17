@@ -57,6 +57,14 @@ pub fn run_play_pipeline(config: &Config, input_file: &str) -> Result<()> {
     run_pipeline(&pipeline_str)
 }
 
+pub fn run_stream_pipeline(_config: &Config, _dest: &str, _port: u16) -> Result<()> {
+    unimplemented!("Streaming not implemented yet")
+}
+
+pub fn run_receive_pipeline(_config: &Config, _listen: &str, _port: u16) -> Result<()> {
+    unimplemented!("Receiving not implemented yet")
+}
+
 // RAII Guard for the pipeline
 
 struct PipelineGuard(gst::Pipeline);
