@@ -34,7 +34,7 @@
     - [x] Wait for the EOS message on the bus before setting state to `Null` (crucial for valid video files).
 - [x] Task: Conductor - User Manual Verification 'Core GStreamer Pipeline Implementation' (Protocol in workflow.md) e777a2a
 
-## Phase 3: Encryption Integration & Verification
+## Phase 3: Encryption Integration & Verification [checkpoint: 6b82c87]
 
 - [x] Task: Validate Encryption Logic 74f993d
     - [x] Ensure the pipeline uses `aesenc` with the configured Key/IV.
@@ -43,4 +43,4 @@
     - [x] Run the Rust app to record a 10-second clip.
     - [x] Use `gst.sh play` (from the original script) to try and decrypt/play the Rust-generated file.
     - [x] Verify that the video plays correctly.
-- [~] Task: Conductor - User Manual Verification 'Encryption Integration & Verification' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Encryption Integration & Verification' (Protocol in workflow.md) 6b82c87
