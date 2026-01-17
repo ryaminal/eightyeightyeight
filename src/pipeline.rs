@@ -115,6 +115,14 @@ fn run_pipeline(pipeline_str: &str) -> Result<()> {
             }
 
             MessageView::Error(err) => {
+                let error_msg = err.error().message().to_string();
+
+                if error_msg.contains("Output window was closed") {
+                    info!("Playback stopped by user (Window closed)");
+
+                    break;
+                }
+
                 error!(
                     "Error from {:?}: {} ({:?})",
                     msg.src().map(|s| s.path_string()),
