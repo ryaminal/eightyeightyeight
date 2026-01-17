@@ -19,11 +19,11 @@
 
 ## Phase 2: Core GStreamer Pipeline Implementation
 
-- [ ] Task: Construct the Record Pipeline
-    - [ ] Create `src/pipeline.rs`.
-    - [ ] Implement a builder function that constructs the GStreamer pipeline string dynamically from the `Config` struct (similar to how `gst.sh` does string concatenation).
-    - [ ] Write a test that asserts the generated pipeline string matches the expected format from `gst.sh`.
-- [ ] Task: Initialize and Start Pipeline
+- [x] Task: Construct the Record Pipeline 2be722f
+    - [x] Create `src/pipeline.rs`.
+    - [x] Implement a builder function that constructs the GStreamer pipeline string dynamically from the `Config` struct (similar to how `gst.sh` does string concatenation).
+    - [x] Write a test that asserts the generated pipeline string matches the expected format from `gst.sh`.
+- [~] Task: Initialize and Start Pipeline
     - [ ] In `src/main.rs` (or `pipeline.rs`), initialize GStreamer (`gst::init`).
     - [ ] Parse the pipeline string into a `gst::Pipeline` object.
     - [ ] Set the pipeline state to `Playing`.
