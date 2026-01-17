@@ -1,0 +1,8 @@
+device = "/dev/video0"
+width = 1920
+height = 1080
+framerate = "30/1"
+bitrate = 5000
+key = "00000000000000000000000000000000"
+iv = "11111111111111111111111111111111"
+output_path = "output.ts.enc"

@@ -2,20 +2,20 @@
 
 ## Phase 1: Project Scaffolding & Configuration
 
-- [x] Task: Initialize Rust project and dependencies d745e0f
+- [x] Task: Initialize Rust project and dependencies de0422a
     - [x] Initialize `cargo new eightyeightyeight`
     - [x] Add dependencies: `gstreamer`, `clap`, `serde`, `serde_derive`, `toml`, `tracing`, `tracing-subscriber`, `anyhow`, `tokio` (full features), `ctrlc`.
     - [x] Create `rust-toolchain.toml` if needed.
-- [x] Task: Implement Configuration Module 7025500
+- [x] Task: Implement Configuration Module de0422a
     - [x] Create `src/config.rs`.
     - [x] Define `Config` struct deriving `Deserialize` to match `gst.sh` parameters (device, resolution, bitrate, key, iv, output_path).
     - [x] Write tests for loading configuration from a sample TOML file.
     - [x] Implement `load_config` function using `config` or standard file I/O.
-- [x] Task: Setup CLI and Logging 16bb5c6
+- [x] Task: Setup CLI and Logging de0422a
     - [x] Update `src/main.rs` to use `clap` for parsing arguments (e.g., `--config <FILE>`).
     - [x] Initialize `tracing_subscriber` for logging to stdout.
     - [x] Verify CLI accepts arguments and logs startup messages.
-- [~] Task: Conductor - User Manual Verification 'Project Scaffolding & Configuration' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Project Scaffolding & Configuration' (Protocol in workflow.md) de0422a
 
 ## Phase 2: Core GStreamer Pipeline Implementation
 
