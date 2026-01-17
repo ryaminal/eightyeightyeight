@@ -26,6 +26,7 @@ A robust, secure, and configurable video capture pipeline designed for embedded 
 - **Operational Integration:** `systemd` service files for automatic startup and supervision.
 - **System Observability:** Exportable runtime metrics (frame drops, buffer usage, IO rates).
 - **Live Streaming:** Network streaming capabilities (e.g., RTSP/WebRTC) alongside local recording.
+- **Interactive Configuration TUI:** A Terminal User Interface to auto-discover video devices, interactively generate configuration files (wizard-style), and manage multiple configuration contexts.
 - **Edge AI:** Integration of lightweight object detection (e.g., YOLO/TFLite) for automated analysis.
 - **Packaging:** Creation of a Yocto recipe for deployment to custom Linux distributions.
 
