@@ -1,12 +1,12 @@
 # Implementation Plan - Implement Streaming and Receiving Modes
 
-## Phase 1: CLI and Configuration
+## Phase 1: CLI and Configuration [checkpoint: 44bcd3e]
 
 - [x] Task: Update CLI for Networking 3b5d3be
     - [x] Add `Stream` and `Receive` variants to `Commands` enum in `src/cli.rs`.
     - [x] Add destination/listen IP and port arguments with defaults (8088).
     - [x] Update `src/main.rs` to dispatch these subcommands.
-- [~] Task: Conductor - User Manual Verification 'CLI and Configuration' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'CLI and Configuration' (Protocol in workflow.md) 44bcd3e
 
 ## Phase 2: Pipeline Implementation
 
