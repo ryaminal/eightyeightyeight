@@ -1,0 +1,8 @@
+{
+  "track_id": "fix_gst_lifecycle_20260117",
+  "type": "fix",
+  "status": "new",
+  "created_at": "2026-01-16T22:00:00Z",
+  "updated_at": "2026-01-16T22:00:00Z",
+  "description": "Fix GStreamer pipeline lifecycle warnings and error handling."
+}
