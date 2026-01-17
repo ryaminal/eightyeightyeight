@@ -22,8 +22,10 @@
 
 ## Phase 3: Enhancements
 
-- [ ] Task: Support `autovideosrc` in configuration
-    - [ ] Update `Config` struct (or logic) to interpret `device="auto"` as `autovideosrc`.
+- [x] Task: Support `autovideosrc` in configuration 4094273
+    - [x] Update `Config` struct (or logic) to interpret `device="auto"` as `autovideosrc`.
+    - [x] Update `build_record_pipeline` to switch between `v4l2src` and `autovideosrc`.
+    - [x] Update tests to cover the auto source case.
     - [ ] Update `build_record_pipeline` to switch between `v4l2src` and `autovideosrc`.
     - [ ] Update tests to cover the auto source case.
 
