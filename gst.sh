@@ -32,7 +32,7 @@ KEY="00112233445566778899aabbccddeeff"
 IV="00112233445566778899aabbccddeeff"
 DEFAULT_IP="127.0.0.1"
 DEFAULT_LISTEN_IP="0.0.0.0" # Listen on all interfaces by default for receive
-DEFAULT_PORT="5000"
+DEFAULT_PORT="8088"
 DEFAULT_FILE="live.ts.enc"
 
 # Shared Source Pipeline (Camera -> Optimized Encode)
