@@ -120,20 +120,48 @@ impl Drop for PipelineGuard {
     }
 }
 
+use crate::metrics::Metrics;
+use std::sync::Arc;
+
+// ...
+
 fn run_pipeline(pipeline_str: &str) -> Result<()> {
     gst::init().context("Failed to initialize GStreamer")?;
 
     info!("Pipeline: {}", pipeline_str);
 
     let pipeline = gst::parse::launch(pipeline_str)
-        .context("Failed to parse pipeline")? 
+        .context("Failed to parse pipeline")?
         .dynamic_cast::<gst::Pipeline>()
         .map_err(|_| anyhow::anyhow!("Element is not a pipeline"))?;
+
+    // Setup Metrics
+    let metrics = Arc::new(Metrics::new());
+
+    // Attach probe to sink (or source) pad if possible to count buffers/bytes
+    // For simplicity in this generic runner, we'll try to find any element named "queue" or "sink"
+    // effectively, we might need a specific naming convention or just iterate.
+    // Ideally, we'd name elements in the build_* functions.
+    // Let's iterate elements and find sinks.
+    let mut iter = pipeline.iterate_sinks();
+    while let Ok(Some(elem)) = iter.next() {
+        if let Some(pad) = elem.static_pad("sink") {
+            let metrics = metrics.clone();
+            pad.add_probe(gst::PadProbeType::BUFFER, move |_pad, info| {
+                if let Some(gst::PadProbeData::Buffer(buffer)) = &info.data {
+                    metrics.increment_frames(1);
+                    metrics.increment_bytes(buffer.size() as u64);
+                    metrics.log_status();
+                }
+                gst::PadProbeReturn::Ok
+            });
+        }
+    }
 
     pipeline
         .set_state(gst::State::Playing)
         .context("Failed to set pipeline to playing")?;
-
+    // ...
     // Create the guard *after* we set state to Playing (or Ready)
     // so it cleans up when this function exits (success or failure).
     let _guard = PipelineGuard(pipeline.clone());
@@ -147,7 +175,8 @@ fn run_pipeline(pipeline_str: &str) -> Result<()> {
         if let Some(pipeline) = pipeline_weak.upgrade() {
             pipeline.send_event(gst::event::Eos::new());
         }
-    }).context("Error setting Ctrl-C handler")?;
+    })
+    .context("Error setting Ctrl-C handler")?;
 
     for msg in bus.iter_timed(gst::ClockTime::NONE) {
         use gst::MessageView;
@@ -179,7 +208,7 @@ fn run_pipeline(pipeline_str: &str) -> Result<()> {
 
     // Success path: _guard will be dropped here too
     info!("Shutting down pipeline...");
-    
+
     Ok(())
 }
 
