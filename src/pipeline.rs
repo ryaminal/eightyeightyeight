@@ -57,6 +57,18 @@ pub fn run_play_pipeline(config: &Config, input_file: &str) -> Result<()> {
     run_pipeline(&pipeline_str)
 }
 
+// RAII Guard for the pipeline
+
+struct PipelineGuard(gst::Pipeline);
+
+impl Drop for PipelineGuard {
+    fn drop(&mut self) {
+        info!("Setting pipeline state to NULL");
+
+        let _ = self.0.set_state(gst::State::Null);
+    }
+}
+
 fn run_pipeline(pipeline_str: &str) -> Result<()> {
     gst::init().context("Failed to initialize GStreamer")?;
 
@@ -71,12 +83,21 @@ fn run_pipeline(pipeline_str: &str) -> Result<()> {
         .set_state(gst::State::Playing)
         .context("Failed to set pipeline to playing")?;
 
+    // Create the guard *after* we set state to Playing (or Ready)
+
+    // so it cleans up when this function exits (success or failure).
+
+    let _guard = PipelineGuard(pipeline.clone());
+
     let bus = pipeline.bus().context("Pipeline has no bus")?;
 
     // Handle Ctrl+C
+
     let pipeline_weak = pipeline.downgrade();
+
     ctrlc::set_handler(move || {
         info!("Ctrl+C detected, sending EOS...");
+
         if let Some(pipeline) = pipeline_weak.upgrade() {
             pipeline.send_event(gst::event::Eos::new());
         }
@@ -89,8 +110,10 @@ fn run_pipeline(pipeline_str: &str) -> Result<()> {
         match msg.view() {
             MessageView::Eos(..) => {
                 info!("End of stream received");
+
                 break;
             }
+
             MessageView::Error(err) => {
                 error!(
                     "Error from {:?}: {} ({:?})",
@@ -98,16 +121,19 @@ fn run_pipeline(pipeline_str: &str) -> Result<()> {
                     err.error(),
                     err.debug()
                 );
+
+                // Return error here; _guard will be dropped and set state to Null
+
                 return Err(anyhow::anyhow!("GStreamer error: {}", err.error()));
             }
+
             _ => (),
         }
     }
 
+    // Success path: _guard will be dropped here too
+
     info!("Shutting down pipeline...");
-    pipeline
-        .set_state(gst::State::Null)
-        .context("Failed to set pipeline to null")?;
 
     Ok(())
 }
