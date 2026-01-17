@@ -26,9 +26,9 @@
 
 ## Phase 3: Integration & Documentation
 
-- [ ] Task: End-to-End Verification
-    - [ ] Run `eightyeightyeight stream` and `eightyeightyeight receive` on the same host (localhost).
-    - [ ] Verify low-latency video playback.
-- [ ] Task: Update README.md
-    - [ ] Add "Streaming" and "Receiving" sections with usage examples.
-- [ ] Task: Conductor - User Manual Verification 'Integration & Documentation' (Protocol in workflow.md)
+- [x] Task: End-to-End Verification 893ef43
+    - [x] Run `eightyeightyeight stream` and `eightyeightyeight receive` on the same host (localhost).
+    - [x] Verify low-latency video playback.
+- [x] Task: Update README.md 893ef43
+    - [x] Add "Streaming" and "Receiving" sections with usage examples.
+- [~] Task: Conductor - User Manual Verification 'Integration & Documentation' (Protocol in workflow.md)

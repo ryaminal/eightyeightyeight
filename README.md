@@ -64,6 +64,22 @@ To play back a recorded file:
 ./target/release/eightyeightyeight play --config config.toml --input output.ts.enc
 ```
 
+### 4. Network Streaming
+
+You can stream encrypted video over the network (UDP/RTP).
+
+**On the Receiver (start first):**
+
+```bash
+./target/release/eightyeightyeight receive --port 8088 --config config.toml
+```
+
+**On the Streamer:**
+
+```bash
+./target/release/eightyeightyeight stream --dest <RECEIVER_IP> --port 8088 --config config.toml
+```
+
 ## Architecture
 
 See [DESIGN.md](./DESIGN.md) for details on the system architecture and pipeline design.
