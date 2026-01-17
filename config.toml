@@ -1,4 +1,4 @@
-device = "/dev/video4"
+device = "/dev/video0"
 width = 640
 height = 480
 framerate = "30/1"

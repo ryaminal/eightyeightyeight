@@ -1,0 +1,6 @@
+/target
+**/*.rs.bk
+Cargo.lock
+*.log
+*.ts.enc
+test_config.toml
