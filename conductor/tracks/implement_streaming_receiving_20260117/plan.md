@@ -24,11 +24,11 @@
     - [x] Add `run_stream_pipeline` and `run_receive_pipeline` to `src/pipeline.rs`.
 - [x] Task: Conductor - User Manual Verification 'Pipeline Implementation' (Protocol in workflow.md) ef33ea2
 
-## Phase 3: Integration & Documentation
+## Phase 3: Integration & Documentation [checkpoint: fc5afba]
 
 - [x] Task: End-to-End Verification 893ef43
     - [x] Run `eightyeightyeight stream` and `eightyeightyeight receive` on the same host (localhost).
     - [x] Verify low-latency video playback.
 - [x] Task: Update README.md 893ef43
     - [x] Add "Streaming" and "Receiving" sections with usage examples.
-- [~] Task: Conductor - User Manual Verification 'Integration & Documentation' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Integration & Documentation' (Protocol in workflow.md) fc5afba
