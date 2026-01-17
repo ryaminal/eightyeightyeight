@@ -20,7 +20,14 @@
     - [x] Reuse or refactor the existing GStreamer bus loop to handle both record and play events (or create a shared helper).
 - [x] Task: Conductor - User Manual Verification 'Playback Pipeline Implementation' (Protocol in workflow.md) 507ad01
 
-## Phase 3: Integration & Verification
+## Phase 3: Enhancements
+
+- [ ] Task: Support `autovideosrc` in configuration
+    - [ ] Update `Config` struct (or logic) to interpret `device="auto"` as `autovideosrc`.
+    - [ ] Update `build_record_pipeline` to switch between `v4l2src` and `autovideosrc`.
+    - [ ] Update tests to cover the auto source case.
+
+## Phase 4: Integration & Verification
 
 - [ ] Task: End-to-End Verification
     - [ ] Record a short clip using `eightyeightyeight record`.
