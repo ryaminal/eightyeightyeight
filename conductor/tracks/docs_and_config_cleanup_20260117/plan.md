@@ -10,14 +10,14 @@
 
 ## Phase 2: Documentation Overhaul
 
-- [ ] Task: Create DESIGN.md
-    - [ ] Document System Overview (CLI -> Rust -> GStreamer).
-    - [ ] Diagram the Record Pipeline (`v4l2src` -> `aesenc` -> `filesink`).
-    - [ ] Diagram the Play Pipeline (`filesrc` -> `aesdec` -> `autovideosink`).
-    - [ ] Explain Configuration (TOML).
-- [ ] Task: Update README.md
-    - [ ] Add Project Description.
-    - [ ] Add Prerequisites (GStreamer, Rust).
-    - [ ] Add Installation/Build steps.
-    - [ ] Add Usage Guide for `record` and `play` commands.
-- [ ] Task: Conductor - User Manual Verification 'Documentation Overhaul' (Protocol in workflow.md)
+- [x] Task: Create DESIGN.md 2c9ab50
+    - [x] Document System Overview (CLI -> Rust -> GStreamer).
+    - [x] Diagram the Record Pipeline (`v4l2src` -> `aesenc` -> `filesink`).
+    - [x] Diagram the Play Pipeline (`filesrc` -> `aesdec` -> `autovideosink`).
+    - [x] Explain Configuration (TOML).
+- [x] Task: Update README.md 2c9ab50
+    - [x] Add Project Description.
+    - [x] Add Prerequisites (GStreamer, Rust).
+    - [x] Add Installation/Build steps.
+    - [x] Add Usage Guide for `record` and `play` commands.
+- [~] Task: Conductor - User Manual Verification 'Documentation Overhaul' (Protocol in workflow.md)
