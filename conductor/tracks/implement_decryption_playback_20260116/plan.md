@@ -20,7 +20,7 @@
     - [x] Reuse or refactor the existing GStreamer bus loop to handle both record and play events (or create a shared helper).
 - [x] Task: Conductor - User Manual Verification 'Playback Pipeline Implementation' (Protocol in workflow.md) 507ad01
 
-## Phase 3: Enhancements
+## Phase 3: Enhancements [checkpoint: 253353f]
 
 - [x] Task: Support `autovideosrc` in configuration 4094273
     - [x] Update `Config` struct (or logic) to interpret `device="auto"` as `autovideosrc`.
