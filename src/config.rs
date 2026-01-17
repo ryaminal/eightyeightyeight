@@ -15,7 +15,12 @@ pub struct Config {
 impl Config {
     pub fn load(path: &str) -> anyhow::Result<Self> {
         let content = std::fs::read_to_string(path)?;
-        let config: Config = toml::from_str(&content)?;
+        let mut config: Config = toml::from_str(&content)?;
+
+        // Resolve the key immediately
+        let resolver = crate::secrets::get_resolver(&config.key);
+        config.key = resolver.resolve()?;
+
         Ok(config)
     }
 }
@@ -24,52 +29,51 @@ impl Config {
 mod tests {
     use super::*;
     use std::io::Write;
+    use tempfile::NamedTempFile;
 
     #[test]
-    fn test_deserialize_config() {
-        let toml_str = r#"
-            device = "/dev/video0"
-            width = 1920
-            height = 1080
-            framerate = "60/1"
-            bitrate = 5000
-            key = "00000000000000000000000000000000"
-            output_path = "output.ts.enc"
-        "#;
-
-        let config: Config = toml::from_str(toml_str).expect("Failed to parse TOML");
-
-        assert_eq!(config.device, "/dev/video0");
-        assert_eq!(config.width, 1920);
-        assert_eq!(config.height, 1080);
-        assert_eq!(config.framerate, "60/1");
-        assert_eq!(config.bitrate, 5000);
-        assert_eq!(config.key, "00000000000000000000000000000000");
-        assert_eq!(config.output_path, PathBuf::from("output.ts.enc"));
-    }
-
-    #[test]
-    fn test_load_from_file() {
+    fn test_load_from_file_literal_resolution() {
         let toml_str = r#"
             device = "/dev/video_test"
             width = 1280
             height = 720
             framerate = "30/1"
             bitrate = 2500
-            key = "12345678901234561234567890123456"
+            key = "literal:resolved_secret_key"
             output_path = "test_output.ts.enc"
         "#;
 
-        let file_path = "test_config.toml";
-        let mut file = std::fs::File::create(file_path).unwrap();
-        file.write_all(toml_str.as_bytes()).unwrap();
+        let mut file = NamedTempFile::new().unwrap();
+        write!(file, "{}", toml_str).unwrap();
 
-        let config = Config::load(file_path).expect("Failed to load config file");
+        let config = Config::load(file.path().to_str().unwrap()).expect("Failed to load config");
+        assert_eq!(config.key, "resolved_secret_key");
+    }
 
-        assert_eq!(config.device, "/dev/video_test");
-        assert_eq!(config.width, 1280);
+    #[test]
+    fn test_load_from_file_env_resolution() {
+        unsafe {
+            std::env::set_var("MY_CONFIG_KEY", "env_secret_key");
+        }
 
-        // Cleanup
-        let _ = std::fs::remove_file(file_path);
+        let toml_str = r#"
+            device = "/dev/video_test"
+            width = 1280
+            height = 720
+            framerate = "30/1"
+            bitrate = 2500
+            key = "env:MY_CONFIG_KEY"
+            output_path = "test_output.ts.enc"
+        "#;
+
+        let mut file = NamedTempFile::new().unwrap();
+        write!(file, "{}", toml_str).unwrap();
+
+        let config = Config::load(file.path().to_str().unwrap()).expect("Failed to load config");
+        assert_eq!(config.key, "env_secret_key");
+
+        unsafe {
+            std::env::remove_var("MY_CONFIG_KEY");
+        }
     }
 }

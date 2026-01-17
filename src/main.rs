@@ -5,6 +5,18 @@ mod cli;
 mod config;
 mod metrics;
 mod pipeline;
+mod secrets;
+
+fn load_config(path: &str) -> anyhow::Result<config::Config> {
+    info!("Loading configuration from: {}", path);
+    match config::Config::load(path) {
+        Ok(c) => Ok(c),
+        Err(e) => {
+            error!("Failed to load configuration: {}", e);
+            Err(e)
+        }
+    }
+}
 
 fn main() -> anyhow::Result<()> {
     // Initialize tracing
@@ -17,16 +29,7 @@ fn main() -> anyhow::Result<()> {
 
     match args.command {
         cli::Commands::Record { config } => {
-            info!("Loading configuration from: {}", config);
-
-            // Load configuration
-            let config = match config::Config::load(&config) {
-                Ok(c) => c,
-                Err(e) => {
-                    error!("Failed to load configuration: {}", e);
-                    return Err(e);
-                }
-            };
+            let config = load_config(&config)?;
 
             info!(
                 "Configuration loaded successfully. Device: {}",
@@ -37,26 +40,12 @@ fn main() -> anyhow::Result<()> {
             pipeline::run_record_pipeline(&config)?;
         }
         cli::Commands::Play { config, input } => {
-            info!("Loading configuration from: {}", config);
-            let config = match config::Config::load(&config) {
-                Ok(c) => c,
-                Err(e) => {
-                    error!("Failed to load configuration: {}", e);
-                    return Err(e);
-                }
-            };
+            let config = load_config(&config)?;
             info!("Playing back file: {}", input);
             pipeline::run_play_pipeline(&config, &input)?;
         }
         cli::Commands::Stream { config, dest, port } => {
-            info!("Loading configuration from: {}", config);
-            let config = match config::Config::load(&config) {
-                Ok(c) => c,
-                Err(e) => {
-                    error!("Failed to load configuration: {}", e);
-                    return Err(e);
-                }
-            };
+            let config = load_config(&config)?;
             info!("Streaming to {}:{}", dest, port);
             pipeline::run_stream_pipeline(&config, &dest, port)?;
         }
@@ -65,14 +54,7 @@ fn main() -> anyhow::Result<()> {
             listen,
             port,
         } => {
-            info!("Loading configuration from: {}", config);
-            let config = match config::Config::load(&config) {
-                Ok(c) => c,
-                Err(e) => {
-                    error!("Failed to load configuration: {}", e);
-                    return Err(e);
-                }
-            };
+            let config = load_config(&config)?;
             info!("Receiving on {}:{}", listen, port);
             pipeline::run_receive_pipeline(&config, &listen, port)?;
         }
