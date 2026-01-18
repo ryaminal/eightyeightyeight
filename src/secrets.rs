@@ -74,12 +74,70 @@ impl SecretResolver for FileResolver {
     }
 }
 
+/// Resolves a secret from AWS Secrets Manager.
+/// Format: "aws:REGION:SECRET_ID"
+pub struct AwsSecretManagerResolver {
+    region: String,
+    secret_id: String,
+}
+
+impl AwsSecretManagerResolver {
+    pub fn new(source: &str) -> Self {
+        let parts: Vec<&str> = source.splitn(2, ':').collect();
+        let region = parts.get(0).unwrap_or(&"us-east-1").to_string();
+        let secret_id = parts.get(1).unwrap_or(&"").to_string();
+        Self { region, secret_id }
+    }
+}
+
+impl SecretResolver for AwsSecretManagerResolver {
+    fn resolve(&self) -> Result<String> {
+        // TODO: Implement AWS Secrets Manager integration using aws-sdk-secretsmanager
+        Err(anyhow::anyhow!(
+            "AWS Secrets Manager resolution not yet implemented. Region: {}, Secret: {}",
+            self.region,
+            self.secret_id
+        ))
+    }
+}
+
+/// Resolves a secret from HashiCorp Vault.
+/// Format: "vault:PATH:KEY"
+pub struct VaultResolver {
+    path: String,
+    key: String,
+}
+
+impl VaultResolver {
+    pub fn new(source: &str) -> Self {
+        let parts: Vec<&str> = source.splitn(2, ':').collect();
+        let path = parts.get(0).unwrap_or(&"").to_string();
+        let key = parts.get(1).unwrap_or(&"").to_string();
+        Self { path, key }
+    }
+}
+
+impl SecretResolver for VaultResolver {
+    fn resolve(&self) -> Result<String> {
+        // TODO: Implement HashiCorp Vault integration
+        Err(anyhow::anyhow!(
+            "HashiCorp Vault resolution not yet implemented. Path: {}, Key: {}",
+            self.path,
+            self.key
+        ))
+    }
+}
+
 /// Factory function to create the appropriate resolver based on the input string.
 pub fn get_resolver(source: &str) -> Box<dyn SecretResolver> {
     if let Some(var_name) = source.strip_prefix("env:") {
         Box::new(EnvVarResolver::new(var_name))
     } else if let Some(path) = source.strip_prefix("file:") {
         Box::new(FileResolver::new(path))
+    } else if let Some(aws_src) = source.strip_prefix("aws:") {
+        Box::new(AwsSecretManagerResolver::new(aws_src))
+    } else if let Some(vault_src) = source.strip_prefix("vault:") {
+        Box::new(VaultResolver::new(vault_src))
     } else {
         // Default to literal if no prefix or explicit "literal:" prefix
         Box::new(LiteralResolver::new(source))
@@ -159,5 +217,11 @@ mod tests {
         
         let implicit_lit = get_resolver("bar");
         assert_eq!(implicit_lit.resolve().unwrap(), "bar");
+
+        let aws_resolver = get_resolver("aws:us-west-2:my-secret");
+        assert!(aws_resolver.resolve().is_err());
+
+        let vault_resolver = get_resolver("vault:secret/data/myapp:api_key");
+        assert!(vault_resolver.resolve().is_err());
     }
 }

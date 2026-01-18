@@ -58,7 +58,7 @@ width = 640
 height = 480
 framerate = "30/1"
 bitrate = 1000
-key = "00112233445566778899aabbccddeeff" # 32-byte hex key
+key = "00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff" # 32-byte hex key (64 chars)
 output_path = "output.ts.enc"
 cv_enabled = false # Optional: Set to true to enable face detection (requires plugins-bad)
 ```

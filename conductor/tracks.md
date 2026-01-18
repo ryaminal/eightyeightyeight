@@ -9,7 +9,7 @@ This file tracks all major tracks for the project. Each track has its own detail
   - **Description:** Implement extensible secure key resolution (Env, File, Vault, etc.).
   - **Folder:** [secure_key_resolution_20260117](./tracks/secure_key_resolution_20260117/)
 
-- [x] **Track: Simple CV Model**
+- [x] **Track: Secret Validation and Stubs**
   - **Status:** Completed
-  - **Description:** Integrate optional `facedetect` GStreamer element.
-  - **Folder:** [simple_cv_model_20260117](./tracks/simple_cv_model_20260117/)
+  - **Description:** Add key validation (AES-256) and stub AWS/Vault resolvers.
+  - **Folder:** [secret_validation_and_stubs_20260117](./tracks/secret_validation_and_stubs_20260117/)
