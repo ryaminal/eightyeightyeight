@@ -10,6 +10,7 @@ A robust, secure video capture and playback application for embedded Linux, writ
 
 - **Secure Recording:** Captures video and encrypts it on-the-fly using AES-256.
 - **Playback:** Decrypts and plays back the secure footage.
+- **Computer Vision:** Optional face detection overlay using GStreamer OpenCV plugins.
 - **Robustness:** Handles graceful shutdowns (Ctrl+C) to ensure data integrity.
 - **Configurable:** Fully driven by a TOML configuration file for hardware adaptability.
 
