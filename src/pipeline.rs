@@ -1,8 +1,12 @@
 use crate::config::Config;
 use anyhow::{Context, Result};
+use fs2;
 use gstreamer as gst;
 use gstreamer::prelude::*;
-use tracing::{error, info};
+use std::sync::Arc;
+use std::thread;
+use std::time::Duration;
+use tracing::{error, info, warn};
 
 pub fn build_record_pipeline(config: &Config) -> Result<String> {
     let source = if config.device == "auto" {
@@ -110,23 +114,70 @@ pub fn build_receive_pipeline(config: &Config, listen: &str, port: u16) -> Strin
 pub fn run_record_pipeline(config: &Config) -> Result<()> {
     gst::init().context("Failed to initialize GStreamer")?;
     let pipeline_str = build_record_pipeline(config)?;
-    run_pipeline(&pipeline_str)
+    info!("Pipeline: {}", pipeline_str);
+    let pipeline = gst::parse::launch(&pipeline_str)
+        .context("Failed to parse pipeline")? 
+        .dynamic_cast::<gst::Pipeline>()
+        .map_err(|_| anyhow::anyhow!("Element is not a pipeline"))?;
+
+    // Disk space monitor thread
+    if let Some(min_space_mb) = config.min_disk_space_mb {
+        let pipeline_weak = pipeline.downgrade();
+        let output_path = config.output_path.clone();
+        thread::spawn(move || {
+            while let Some(pipeline) = pipeline_weak.upgrade() {
+                if let Some(output_dir) = output_path.parent() {
+                    if let Ok(free_space) = fs2::available_space(output_dir) {
+                        let free_space_mb = free_space / 1_000_000;
+                        if free_space_mb < min_space_mb {
+                            warn!(
+                                "Disk space is low ({} MB remaining), sending EOS to stop pipeline.",
+                                free_space_mb
+                            );
+                            pipeline.send_event(gst::event::Eos::new());
+                            break;
+                        }
+                    }
+                }
+                thread::sleep(Duration::from_secs(10));
+            }
+        });
+    }
+
+    run_pipeline_loop(&pipeline)
 }
 
 pub fn run_play_pipeline(config: &Config, input_file: &str) -> Result<()> {
+    gst::init().context("Failed to initialize GStreamer")?;
     let pipeline_str = build_play_pipeline(config, input_file);
-    run_pipeline(&pipeline_str)
+    info!("Pipeline: {}", pipeline_str);
+    let pipeline = gst::parse::launch(&pipeline_str)
+        .context("Failed to parse pipeline")? 
+        .dynamic_cast::<gst::Pipeline>()
+        .map_err(|_| anyhow::anyhow!("Element is not a pipeline"))?;
+    run_pipeline_loop(&pipeline)
 }
 
 pub fn run_stream_pipeline(config: &Config, dest: &str, port: u16) -> Result<()> {
     gst::init().context("Failed to initialize GStreamer")?;
     let pipeline_str = build_stream_pipeline(config, dest, port)?;
-    run_pipeline(&pipeline_str)
+    info!("Pipeline: {}", pipeline_str);
+    let pipeline = gst::parse::launch(&pipeline_str)
+        .context("Failed to parse pipeline")? 
+        .dynamic_cast::<gst::Pipeline>()
+        .map_err(|_| anyhow::anyhow!("Element is not a pipeline"))?;
+    run_pipeline_loop(&pipeline)
 }
 
 pub fn run_receive_pipeline(config: &Config, listen: &str, port: u16) -> Result<()> {
+    gst::init().context("Failed to initialize GStreamer")?;
     let pipeline_str = build_receive_pipeline(config, listen, port);
-    run_pipeline(&pipeline_str)
+    info!("Pipeline: {}", pipeline_str);
+    let pipeline = gst::parse::launch(&pipeline_str)
+        .context("Failed to parse pipeline")? 
+        .dynamic_cast::<gst::Pipeline>()
+        .map_err(|_| anyhow::anyhow!("Element is not a pipeline"))?;
+    run_pipeline_loop(&pipeline)
 }
 
 // RAII Guard for the pipeline
@@ -140,7 +191,6 @@ impl Drop for PipelineGuard {
 }
 
 use crate::metrics::Metrics;
-use std::sync::Arc;
 
 fn check_element_exists(element: &str) -> Result<()> {
     if gst::ElementFactory::find(element).is_none() {
@@ -152,24 +202,9 @@ fn check_element_exists(element: &str) -> Result<()> {
     Ok(())
 }
 
-fn run_pipeline(pipeline_str: &str) -> Result<()> {
-    gst::init().context("Failed to initialize GStreamer")?;
-
-    info!("Pipeline: {}", pipeline_str);
-
-    let pipeline = gst::parse::launch(pipeline_str)
-        .context("Failed to parse pipeline")?
-        .dynamic_cast::<gst::Pipeline>()
-        .map_err(|_| anyhow::anyhow!("Element is not a pipeline"))?;
-
+fn run_pipeline_loop(pipeline: &gst::Pipeline) -> Result<()> {
     // Setup Metrics
     let metrics = Arc::new(Metrics::new());
-
-    // Attach probe to sink (or source) pad if possible to count buffers/bytes
-    // For simplicity in this generic runner, we'll try to find any element named "queue" or "sink"
-    // effectively, we might need a specific naming convention or just iterate.
-    // Ideally, we'd name elements in the build_* functions.
-    // Let's iterate elements and find sinks.
     let mut iter = pipeline.iterate_sinks();
     while let Ok(Some(elem)) = iter.next() {
         if let Some(pad) = elem.static_pad("sink") {
@@ -188,9 +223,6 @@ fn run_pipeline(pipeline_str: &str) -> Result<()> {
     pipeline
         .set_state(gst::State::Playing)
         .context("Failed to set pipeline to playing")?;
-    // ...
-    // Create the guard *after* we set state to Playing (or Ready)
-    // so it cleans up when this function exits (success or failure).
     let _guard = PipelineGuard(pipeline.clone());
 
     let bus = pipeline.bus().context("Pipeline has no bus")?;
@@ -231,18 +263,17 @@ fn run_pipeline(pipeline_str: &str) -> Result<()> {
                     err.error(),
                     err.debug()
                 );
-                // Return error here; _guard will be dropped and set state to Null
                 return Err(anyhow::anyhow!("GStreamer error: {}", err.error()));
             }
             _ => (),
         }
     }
 
-    // Success path: _guard will be dropped here too
     info!("Shutting down pipeline...");
 
     Ok(())
 }
+
 
 #[cfg(test)]
 mod tests {
@@ -260,6 +291,7 @@ mod tests {
             key: "00112233445566778899aabbccddeeff".to_string(),
             output_path: PathBuf::from("live.ts.enc"),
             cv_enabled: false,
+            min_disk_space_mb: None,
         };
 
         let expected = "v4l2src device=/dev/video4 \
@@ -292,6 +324,7 @@ mod tests {
             key: "00112233445566778899aabbccddeeff".to_string(),
             output_path: PathBuf::from("live.ts.enc"),
             cv_enabled: true,
+            min_disk_space_mb: None,
         };
 
         let expected = "v4l2src device=/dev/video4 \
@@ -333,6 +366,7 @@ mod tests {
             key: "00112233445566778899aabbccddeeff".to_string(),
             output_path: PathBuf::from("unused.enc"),
             cv_enabled: false,
+            min_disk_space_mb: None,
         };
 
         let input_file = "test_video.enc";
@@ -358,6 +392,7 @@ mod tests {
             key: "00112233445566778899aabbccddeeff".to_string(),
             output_path: PathBuf::from("live.ts.enc"),
             cv_enabled: false,
+            min_disk_space_mb: None,
         };
 
         let expected = "autovideosrc \
@@ -389,6 +424,7 @@ mod tests {
             key: "00112233445566778899aabbccddeeff".to_string(),
             output_path: PathBuf::from("unused.enc"),
             cv_enabled: false,
+            min_disk_space_mb: None,
         };
 
         let dest = "127.0.0.1";
@@ -420,6 +456,7 @@ mod tests {
             key: "00112233445566778899aabbccddeeff".to_string(),
             output_path: PathBuf::from("unused.enc"),
             cv_enabled: false,
+            min_disk_space_mb: None,
         };
 
         let listen = "0.0.0.0";

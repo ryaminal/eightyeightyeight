@@ -98,6 +98,63 @@ You can stream encrypted video over the network (UDP/RTP).
 ./target/release/eightyeightyeight stream --dest <RECEIVER_IP> --port 8088 --config config.toml
 ```
 
+## Deployment (Systemd)
+
+This project includes a `systemd` service file for running `eightyeightyeight` as a background service on Linux.
+
+### 1. Setup
+
+1.  **Copy the binary:**
+
+    ```bash
+    sudo cp ./target/release/eightyeightyeight /usr/local/bin/
+    ```
+
+2.  **Copy the service file:**
+
+    ```bash
+    sudo cp ./packaging/systemd/eightyeightyeight.service /etc/systemd/system/
+    ```
+
+3.  **Create a configuration directory:**
+
+    ```bash
+    sudo mkdir -p /etc/eightyeightyeight
+    ```
+
+4.  **Copy and edit the configuration file:**
+
+    ```bash
+    sudo cp ./config.toml /etc/eightyeightyeight/config.toml
+    # Edit /etc/eightyeightyeight/config.toml to your needs
+    ```
+
+### 2. Usage
+
+-   **Start the service:**
+
+    ```bash
+    sudo systemctl start eightyeightyeight.service
+    ```
+
+-   **Enable on boot:**
+
+    ```bash
+    sudo systemctl enable eightyeightyeight.service
+    ```
+
+-   **Check the status:**
+
+    ```bash
+    sudo systemctl status eightyeightyeight.service
+    ```
+
+-   **View logs:**
+
+    ```bash
+    sudo journalctl -u eightyeightyeight.service -f
+    ```
+
 ## Architecture
 
 See [DESIGN.md](./DESIGN.md) for details on the system architecture and pipeline design.

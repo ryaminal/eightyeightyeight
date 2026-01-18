@@ -1,0 +1,13 @@
+[Unit]
+Description=Eightyeightyeight Video Capture Service
+After=network.target
+
+[Service]
+ExecStart=/usr/local/bin/eightyeightyeight record
+Restart=on-failure
+User=root
+Group=root
+EnvironmentFile=/etc/eightyeightyeight/config.toml
+
+[Install]
+WantedBy=multi-user.target

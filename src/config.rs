@@ -12,6 +12,8 @@ pub struct Config {
     pub output_path: PathBuf,
     #[serde(default)]
     pub cv_enabled: bool,
+    #[serde(default)]
+    pub min_disk_space_mb: Option<u64>,
 }
 
 impl Config {
@@ -70,6 +72,7 @@ mod tests {
         let config = Config::load(file.path().to_str().unwrap()).expect("Failed to load config");
         assert_eq!(config.key, valid_key);
         assert_eq!(config.cv_enabled, false);
+        assert_eq!(config.min_disk_space_mb, None);
     }
 
     #[test]
@@ -141,5 +144,29 @@ mod tests {
         unsafe {
             std::env::remove_var("MY_CONFIG_KEY");
         }
+    }
+
+    #[test]
+    fn test_load_with_min_disk_space() {
+        let valid_key = "00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff";
+        let toml_str = format!(
+            r#"
+            device = "/dev/video_test"
+            width = 1280
+            height = 720
+            framerate = "30/1"
+            bitrate = 2500
+            key = "literal:{}"
+            output_path = "test_output.ts.enc"
+            min_disk_space_mb = 1024
+        "#,
+            valid_key
+        );
+
+        let mut file = NamedTempFile::new().unwrap();
+        write!(file, "{}", toml_str).unwrap();
+
+        let config = Config::load(file.path().to_str().unwrap()).expect("Failed to load config");
+        assert_eq!(config.min_disk_space_mb, Some(1024));
     }
 }
