@@ -16,3 +16,8 @@
     - [x] Verified via unit tests that pipeline string is constructed correctly.
     - [ ] (Skipped) Run with `cv_enabled = true`. (Skipped: `facedetect` plugin missing in environment).
 - [x] Update `README.md` with GStreamer installation instructions for multiple platforms.
+
+## Phase 4: Runtime Checks (Bonus)
+- [x] Implement `check_element_availability(element_name: &str)` in `src/pipeline.rs`.
+- [x] Call this check when `cv_enabled` is true.
+- [x] Return a user-friendly error if `facedetect` is missing.
