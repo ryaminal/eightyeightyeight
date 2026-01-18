@@ -29,9 +29,9 @@ impl Config {
     }
 
     fn validate_key(key: &str) -> anyhow::Result<()> {
-        if key.len() != 64 {
+        if key.len() != 32 && key.len() != 64 {
             return Err(anyhow::anyhow!(
-                "Invalid key length: {}. Expected 64 characters (32-byte hex).",
+                "Invalid key length: {}. Expected 32 (AES-128) or 64 (AES-256) hex characters.",
                 key.len()
             ));
         }
@@ -67,6 +67,26 @@ mod tests {
         let config = Config::load(file.path().to_str().unwrap()).expect("Failed to load config");
         assert_eq!(config.key, valid_key);
         assert_eq!(config.cv_enabled, false);
+    }
+
+    #[test]
+    fn test_valid_short_key_length() {
+        let short_key = "00112233445566778899aabbccddeeff"; // 32 chars
+        let toml_str = format!(r#"
+            device = "/dev/video_test"
+            width = 1280
+            height = 720
+            framerate = "30/1"
+            bitrate = 2500
+            key = "literal:{}"
+            output_path = "test_output.ts.enc"
+        "#, short_key);
+
+        let mut file = NamedTempFile::new().unwrap();
+        write!(file, "{}", toml_str).unwrap();
+
+        let config = Config::load(file.path().to_str().unwrap()).expect("Failed to load config with short key");
+        assert_eq!(config.key, short_key);
     }
 
     #[test]
