@@ -84,7 +84,7 @@ pub struct AwsSecretManagerResolver {
 impl AwsSecretManagerResolver {
     pub fn new(source: &str) -> Self {
         let parts: Vec<&str> = source.splitn(2, ':').collect();
-        let region = parts.get(0).unwrap_or(&"us-east-1").to_string();
+        let region = parts.first().unwrap_or(&"us-east-1").to_string();
         let secret_id = parts.get(1).unwrap_or(&"").to_string();
         Self { region, secret_id }
     }
@@ -111,7 +111,7 @@ pub struct VaultResolver {
 impl VaultResolver {
     pub fn new(source: &str) -> Self {
         let parts: Vec<&str> = source.splitn(2, ':').collect();
-        let path = parts.get(0).unwrap_or(&"").to_string();
+        let path = parts.first().unwrap_or(&"").to_string();
         let key = parts.get(1).unwrap_or(&"").to_string();
         Self { path, key }
     }
@@ -202,7 +202,7 @@ mod tests {
         let env_resolver = get_resolver("env:MY_VAR");
         // We can't easily check the type of a trait object, but we can verify behavior
         // (or just trust the factory logic which is simple enough)
-        
+
         // Quick integration check
         unsafe {
             std::env::set_var("MY_VAR", "my_val");
@@ -214,7 +214,7 @@ mod tests {
 
         let lit_resolver = get_resolver("literal:foo");
         assert_eq!(lit_resolver.resolve().unwrap(), "foo");
-        
+
         let implicit_lit = get_resolver("bar");
         assert_eq!(implicit_lit.resolve().unwrap(), "bar");
 

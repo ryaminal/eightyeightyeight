@@ -51,7 +51,8 @@ mod tests {
     #[test]
     fn test_load_from_file_literal_resolution() {
         let valid_key = "00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff";
-        let toml_str = format!(r#"
+        let toml_str = format!(
+            r#"
             device = "/dev/video_test"
             width = 1280
             height = 720
@@ -59,7 +60,9 @@ mod tests {
             bitrate = 2500
             key = "literal:{}"
             output_path = "test_output.ts.enc"
-        "#, valid_key);
+        "#,
+            valid_key
+        );
 
         let mut file = NamedTempFile::new().unwrap();
         write!(file, "{}", toml_str).unwrap();
@@ -72,7 +75,8 @@ mod tests {
     #[test]
     fn test_valid_short_key_length() {
         let short_key = "00112233445566778899aabbccddeeff"; // 32 chars
-        let toml_str = format!(r#"
+        let toml_str = format!(
+            r#"
             device = "/dev/video_test"
             width = 1280
             height = 720
@@ -80,12 +84,15 @@ mod tests {
             bitrate = 2500
             key = "literal:{}"
             output_path = "test_output.ts.enc"
-        "#, short_key);
+        "#,
+            short_key
+        );
 
         let mut file = NamedTempFile::new().unwrap();
         write!(file, "{}", toml_str).unwrap();
 
-        let config = Config::load(file.path().to_str().unwrap()).expect("Failed to load config with short key");
+        let config = Config::load(file.path().to_str().unwrap())
+            .expect("Failed to load config with short key");
         assert_eq!(config.key, short_key);
     }
 

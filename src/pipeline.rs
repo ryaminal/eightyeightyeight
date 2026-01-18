@@ -108,6 +108,7 @@ pub fn build_receive_pipeline(config: &Config, listen: &str, port: u16) -> Strin
 }
 
 pub fn run_record_pipeline(config: &Config) -> Result<()> {
+    gst::init().context("Failed to initialize GStreamer")?;
     let pipeline_str = build_record_pipeline(config)?;
     run_pipeline(&pipeline_str)
 }
@@ -118,6 +119,7 @@ pub fn run_play_pipeline(config: &Config, input_file: &str) -> Result<()> {
 }
 
 pub fn run_stream_pipeline(config: &Config, dest: &str, port: u16) -> Result<()> {
+    gst::init().context("Failed to initialize GStreamer")?;
     let pipeline_str = build_stream_pipeline(config, dest, port)?;
     run_pipeline(&pipeline_str)
 }
@@ -289,6 +291,17 @@ mod tests {
 
         let expected = "v4l2src device=/dev/video4 \
             ! video/x-raw,width=640,height=480,framerate=30/1 \
+            ! videoconvert  \
+            ! videoconvert ! facedetect ! videoconvert \
+            ! video/x-raw,format=I420 \
+            ! queue \
+            ! x264enc tune=zerolatency speed-preset=ultrafast bitrate=1000 \
+            ! queue \
+            ! h264parse \
+            ! mpegtsmux \
+            ! queue \
+            ! rndbuffersize min=4096 max=4096 \
+            ! aesenc key=00112233445566778899aabbccddeeff serialize-iv=true per-buffer-padding=false \
             ! filesink location=live.ts.enc";
 
         // Mock GStreamer initialization for the test
@@ -297,7 +310,7 @@ mod tests {
         // We should skip it or mock the check if possible.
         // For now, we'll try to run it, and if it fails due to missing element, we'll ignore it?
         // Or better, we only assert success if the element exists.
-        
+
         match build_record_pipeline(&config) {
             Ok(actual) => assert_eq!(actual, expected),
             Err(_) => println!("Skipping test_build_record_pipeline_with_cv: facedetect missing"),
