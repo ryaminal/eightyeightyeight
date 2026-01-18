@@ -220,6 +220,11 @@ fn run_pipeline(pipeline_str: &str) -> Result<()> {
                     break;
                 }
 
+                if error_msg.contains("Stream doesn't contain enough data") {
+                    info!("Stream stopped with insufficient data (likely interrupted)");
+                    break;
+                }
+
                 error!(
                     "Error from {:?}: {} ({:?})",
                     msg.src().map(|s| s.path_string()),
