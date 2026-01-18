@@ -19,11 +19,11 @@ A robust, secure video capture and playback application for embedded Linux, writ
 - **GStreamer:** Development libraries and plugins.
   - **Ubuntu / Debian:**
     ```bash
-    sudo apt install libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav
+    sudo apt install libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-opencv
     ```
   - **Fedora:**
     ```bash
-    sudo dnf install gstreamer1-devel gstreamer1-plugins-base-devel gstreamer1-plugins-base gstreamer1-plugins-good gstreamer1-plugins-bad-free gstreamer1-plugins-ugly-free gstreamer1-libav
+    sudo dnf install gstreamer1-devel gstreamer1-plugins-base-devel gstreamer1-plugins-base gstreamer1-plugins-good gstreamer1-plugins-bad-free gstreamer1-plugins-bad-free-opencv gstreamer1-plugins-ugly-free gstreamer1-libav
     ```
   - **Arch Linux:**
     ```bash
