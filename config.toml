@@ -5,3 +5,4 @@ framerate = "30/1"
 bitrate = 1000
 key = "00112233445566778899aabbccddeeff"
 output_path = "output.ts.enc"
+cv_enabled = false                       # set to true if you've installed the required dependences. else you'll see some facedetect errors
