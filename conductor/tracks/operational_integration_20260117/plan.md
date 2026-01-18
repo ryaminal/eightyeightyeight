@@ -18,4 +18,4 @@
     - [x] If disk space is below the threshold, send an EOS event to the pipeline bus to trigger a graceful shutdown.
 - [x] Task: Add unit tests for disk space checking logic.
 
-## Phase 2 Checkpoint: [checkpoint: pending]
+## Phase 2 Checkpoint: [checkpoint: a53c5b2]
