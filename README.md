@@ -16,8 +16,25 @@ A robust, secure video capture and playback application for embedded Linux, writ
 ## Prerequisites
 
 - **Rust:** Latest stable toolchain.
-- **GStreamer:** Development libraries.
-  - Ubuntu/Debian: `sudo apt install libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav`
+- **GStreamer:** Development libraries and plugins.
+  - **Ubuntu / Debian:**
+    ```bash
+    sudo apt install libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav
+    ```
+  - **Fedora:**
+    ```bash
+    sudo dnf install gstreamer1-devel gstreamer1-plugins-base-devel gstreamer1-plugins-base gstreamer1-plugins-good gstreamer1-plugins-bad-free gstreamer1-plugins-ugly-free gstreamer1-libav
+    ```
+  - **Arch Linux:**
+    ```bash
+    sudo pacman -S gstreamer gst-plugins-base gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav
+    ```
+  - **macOS (Homebrew):**
+    ```bash
+    brew install gstreamer gst-plugins-base gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav
+    ```
+
+*Note: The `gst-plugins-bad` package is required for the optional `cv_enabled` (face detection) feature.*
 
 ## Installation
 
@@ -43,6 +60,7 @@ framerate = "30/1"
 bitrate = 1000
 key = "00112233445566778899aabbccddeeff" # 32-byte hex key
 output_path = "output.ts.enc"
+cv_enabled = false # Optional: Set to true to enable face detection (requires plugins-bad)
 ```
 
 ### 2. Recording

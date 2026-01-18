@@ -15,3 +15,4 @@
 - [x] Manual verification:
     - [x] Verified via unit tests that pipeline string is constructed correctly.
     - [ ] (Skipped) Run with `cv_enabled = true`. (Skipped: `facedetect` plugin missing in environment).
+- [x] Update `README.md` with GStreamer installation instructions for multiple platforms.
