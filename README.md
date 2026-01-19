@@ -51,6 +51,18 @@ The application uses a `config.toml` file for settings.
 
 ### 1. Configuration
 
+The application uses a `config.toml` file for settings. You can create one manually or use the interactive wizard.
+
+**Interactive Wizard:**
+
+```bash
+./target/release/eightyeightyeight init
+```
+
+This will walk you through device selection, resolution, and key generation.
+
+**Manual Configuration:**
+
 Create a `config.toml` file:
 
 ```toml
@@ -59,9 +71,20 @@ width = 640
 height = 480
 framerate = "30/1"
 bitrate = 1000
-key = "00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff" # 32-byte hex key (64 chars)
+# Key Resolution:
+# - Literal: "literal:HEXSTRING" (or just HEXSTRING)
+# - Env Var: "env:VAR_NAME"
+# - File: "file:/path/to/key"
+key = "00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff"
 output_path = "output.ts.enc"
-cv_enabled = false # Optional: Set to true to enable face detection (requires plugins-bad)
+
+# Optional Features
+cv_enabled = false # Enable face detection (requires plugins-bad)
+
+# Operational Settings
+min_disk_space_mb = 1000 # Stop if free space < 1GB
+max_files = 10           # Rotate files (requires %05d in output_path)
+max_file_size_mb = 100   # Max size per file before rotation
 ```
 
 ### 2. Recording
