@@ -103,87 +103,41 @@ fn select_device_and_mode() -> Result<(String, u32, u32, String)> {
     }
     monitor.stop();
 
-        if devices.is_empty() {
+    if devices.is_empty() {
+        println!("No GStreamer video sources found.");
+        return manual_entry();
+    }
 
-            println!("No GStreamer video sources found.");
+    struct DeviceOption {
+        name: String,
+        device_path: String, // e.g. /dev/video0
+        gst_device: gst::Device,
+    }
 
-            return manual_entry();
-
+    impl std::fmt::Display for DeviceOption {
+        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            write!(f, "{} ({})", self.name, self.device_path)
         }
+    }
 
-    
+    let mut options = Vec::new();
+    for device in devices {
+        let name = device.display_name().to_string();
+        let props = device.properties();
 
-        println!("Debug: Found {} raw devices.", devices.len());
-
-    
-
-        struct DeviceOption {
-
-            name: String,
-
-            device_path: String, // e.g. /dev/video0
-
-            gst_device: gst::Device,
-
-        }
-
-    
-
-        impl std::fmt::Display for DeviceOption {
-
-            fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-
-                write!(f, "{} ({})", self.name, self.device_path)
-
-            }
-
-        }
-
-    
-
-        let mut options = Vec::new();
-
-        for device in devices {
-
-            let name = device.display_name().to_string();
-
-            let props = device.properties();
-
-            
-
-                    if let Some(props) = &props {
-
-            
-
-                        println!("Debug: Device '{}' properties: {}", name, props.to_string());
-
-            
-
-                    }
-
-    
-
-            let path = if let Some(props) = props {
-
-                if let Ok(p) = props.get::<&str>("device.path") {
-
-                    p.to_string()
-
-                } else {
-
-                    "unknown".to_string()
-
-                }
-
+        let path = if let Some(props) = &props {
+            if let Ok(p) = props.get::<&str>("device.path") {
+                p.to_string()
+            } else if let Ok(p) = props.get::<&str>("api.v4l2.path") {
+                p.to_string()
             } else {
-
                 "unknown".to_string()
+            }
+        } else {
+            "unknown".to_string()
+        };
 
-            };
-
-    
-
-            if path != "unknown" {
+        if path != "unknown" {
             options.push(DeviceOption {
                 name,
                 device_path: path,
