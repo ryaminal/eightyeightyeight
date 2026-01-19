@@ -5,7 +5,7 @@ use rand::RngCore;
 use std::path::PathBuf;
 
 pub fn run(output_path: String) -> Result<()> {
-    println!("Welcome to the 888 Configuration Wizard!");
+    println!("Welcome to the 8088 Configuration Wizard!");
 
     // 1. Device Selection
     let device = select_device()?;
