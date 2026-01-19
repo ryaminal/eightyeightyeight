@@ -100,7 +100,7 @@ cv_enabled = true       # Face detection
 
 ## 4. Security
 
-- **Encryption:** AES-256-CBC is used to encrypt the video stream.
+- **Encryption:** AES-256 is used to encrypt the video stream.
 - **Key Management:** The system supports extensible key resolution strategies (`secrets.rs`):
   - **Literal:** For testing/dev.
   - **Environment Variable:** For containerized deployments.
@@ -121,17 +121,3 @@ cv_enabled = true       # Face detection
 - **Graceful Shutdown:** The application handles `SIGINT` (Ctrl+C) by sending an End-of-Stream (EOS) event to the pipeline. This ensures that the file containers are properly closed and headers are written before the application exits.
 - **Error Handling:** GStreamer bus messages are monitored for errors, which are logged via `tracing`.
 - **Operational Integration:** Support for systemd service supervision and disk space monitoring.
-
-## 7. Architectural Trade-offs
-
-### AES-CBC vs. AES-GCM
-**Decision:** Used AES-256-CBC.
-**Reasoning:** While GCM provides authenticated encryption (integrity + privacy), it adds significant complexity to the GStreamer pipeline regarding tag handling and container formats. CBC was chosen for broad compatibility with standard MPEG-TS demuxers and lower overhead on embedded CPUs, with the trade-off of lacking intrinsic integrity checks (though the MPEG-TS container structure provides some resilience).
-
-### TOML vs. Environment Variables
-**Decision:** Used a dedicated `config.toml` file.
-**Reasoning:** While environment variables are standard for cloud-native apps (12-factor), embedded devices often need persistent, complex configurations (like specific resolution/framerate tuples) that are clumsy to encode in strings. TOML provides a balance of structure and readability.
-
-### Hybrid Async/Sync Runtime
-**Decision:** Used `tokio` for the CLI and Wizard, but standard GStreamer threading for the pipeline.
-**Reasoning:** GStreamer manages its own internal threads. Wrapping the pipeline strictly in `async`/`await` would introduce unnecessary abstraction layers. The hybrid approach allows the control plane (UI/Signals) to be responsive while the data plane runs at native speed.

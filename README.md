@@ -163,35 +163,35 @@ This project includes example `systemd` service files for running `eightyeightye
 
 1. **Copy the binary:**
 
-    ```bash
-    sudo cp ./target/release/eightyeightyeight /usr/local/bin/
-    ```
+   ```bash
+   sudo cp ./target/release/eightyeightyeight /usr/local/bin/
+   ```
 
 2. **Copy the service files:**
 
-    ```bash
-    # For recording
-    sudo cp ./packaging/systemd/eightyeightyeight-record.service /etc/systemd/system/
+   ```bash
+   # For recording
+   sudo cp ./packaging/systemd/eightyeightyeight-record.service /etc/systemd/system/
 
-    # For streaming
-    sudo cp ./packaging/systemd/eightyeightyeight-stream.service /etc/systemd/system/
+   # For streaming
+   sudo cp ./packaging/systemd/eightyeightyeight-stream.service /etc/systemd/system/
 
-    # For receiving
-    sudo cp ./packaging/systemd/eightyeightyeight-receive.service /etc/systemd/system/
-    ```
+   # For receiving
+   sudo cp ./packaging/systemd/eightyeightyeight-receive.service /etc/systemd/system/
+   ```
 
 3. **Create a configuration directory:**
 
-    ```bash
-    sudo mkdir -p /etc/eightyeightyeight
-    ```
+   ```bash
+   sudo mkdir -p /etc/eightyeightyeight
+   ```
 
 4. **Copy and edit the configuration file:**
 
-    ```bash
-    sudo cp ./config.toml /etc/eightyeightyeight/config.toml
-    # Edit /etc/eightyeightyeight/config.toml to your needs
-    ```
+   ```bash
+   sudo cp ./config.toml /etc/eightyeightyeight/config.toml
+   # Edit /etc/eightyeightyeight/config.toml to your needs
+   ```
 
 ### 2. Usage
 
@@ -219,9 +219,7 @@ See [DESIGN.md](./DESIGN.md) for details on the system architecture and pipeline
 
 ## Challenges & Lessons Learned
 
-- **GStreamer in Rust:** While the bindings are excellent, translating dynamic pipeline manipulation from C documentation to Rust's strict ownership model required a shift in mental models, particularly regarding object lifetimes and callbacks.
-- **Secure File Rotation:** Getting `splitmuxsink` to work seamlessly with on-the-fly AES encryption was non-trivial. It required constructing a custom "sink bin" to ensure every rotated file segment was independently decryptable and contained a valid header.
-- **Hardware Abstraction:** Initially, I relied on simple filesystem checks (`/dev/video*`) for device discovery. I learned that true robustness requires querying the hardware capabilities via the `GstDeviceMonitor` API to prevent invalid configuration states before the pipeline even starts.
+- **Secure File Rotation:** Getting `splitmuxsink` to work seamlessly with on-the-fly AES encryption was non-trivial. It required constructing a custom "sink bin" to ensure every rotated file segment was independently decryptable and contained a valid header. By far the most challenging part of this project was figuring out how to encrypt the recording in proper chunks.
 
 ## Future Improvements
 
@@ -229,4 +227,3 @@ See [DESIGN.md](./DESIGN.md) for details on the system architecture and pipeline
 - **Packaging:** Creation of a Yocto recipe for embedded Linux deployment.
 - **Hardware Acceleration:** Support for hardware-specific encoding/decoding elements (e.g., `vaapih264enc`, `omxh264enc`).
 - **Secure Key Management:** Integration with Kubernetes Secrets or Cloud KMS.
-
