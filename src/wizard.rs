@@ -92,10 +92,15 @@ fn select_device_and_mode() -> Result<(String, u32, u32, String)> {
     monitor.add_filter(Some("Video/Source"), None);
     let _ = monitor.start();
 
-    // Give it a moment to probe? Usually synchronous enough for local devices if started.
-    // However, sometimes it needs a main loop context or time.
-    // For a simple CLI wizard, we can check immediately.
-    let devices = monitor.devices();
+    // Poll for devices for up to 2 seconds
+    let mut devices = monitor.devices();
+    for _ in 0..20 {
+        if !devices.is_empty() {
+            break;
+        }
+        std::thread::sleep(std::time::Duration::from_millis(100));
+        devices = monitor.devices();
+    }
     monitor.stop();
 
     if devices.is_empty() {
