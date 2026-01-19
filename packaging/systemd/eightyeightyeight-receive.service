@@ -1,0 +1,17 @@
+# NOTE: This systemd service file is a stub for demonstration purposes.
+# In a production environment, you would need to adjust paths, users, 
+# and ensure proper environment variable management.
+
+[Unit]
+Description=Eightyeightyeight Video Receiving Service
+After=network.target
+
+[Service]
+# Assumes config is placed at /etc/eightyeightyeight/config.toml
+ExecStart=/usr/local/bin/eightyeightyeight receive --config /etc/eightyeightyeight/config.toml --listen 0.0.0.0 --port 8088
+Restart=on-failure
+User=root
+Group=root
+
+[Install]
+WantedBy=multi-user.target

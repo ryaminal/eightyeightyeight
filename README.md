@@ -143,7 +143,7 @@ cargo run -- receive & sleep 2 && timeout 10 cargo run -- stream && kill $!
 
 ## Deployment (Systemd)
 
-This project includes a `systemd` service file for running `eightyeightyeight` as a background service on Linux.
+This project includes example `systemd` service files for running `eightyeightyeight` components as background services.
 
 ### 1. Setup
 
@@ -153,10 +153,17 @@ This project includes a `systemd` service file for running `eightyeightyeight` a
     sudo cp ./target/release/eightyeightyeight /usr/local/bin/
     ```
 
-2.  **Copy the service file:**
+2.  **Copy the service files:**
 
     ```bash
-    sudo cp ./packaging/systemd/eightyeightyeight.service /etc/systemd/system/
+    # For recording
+    sudo cp ./packaging/systemd/eightyeightyeight-record.service /etc/systemd/system/
+    
+    # For streaming
+    sudo cp ./packaging/systemd/eightyeightyeight-stream.service /etc/systemd/system/
+    
+    # For receiving
+    sudo cp ./packaging/systemd/eightyeightyeight-receive.service /etc/systemd/system/
     ```
 
 3.  **Create a configuration directory:**
@@ -174,28 +181,22 @@ This project includes a `systemd` service file for running `eightyeightyeight` a
 
 ### 2. Usage
 
--   **Start the service:**
+-   **Start a service (e.g., record):**
 
     ```bash
-    sudo systemctl start eightyeightyeight.service
+    sudo systemctl start eightyeightyeight-record.service
     ```
 
 -   **Enable on boot:**
 
     ```bash
-    sudo systemctl enable eightyeightyeight.service
+    sudo systemctl enable eightyeightyeight-record.service
     ```
 
 -   **Check the status:**
 
     ```bash
-    sudo systemctl status eightyeightyeight.service
-    ```
-
--   **View logs:**
-
-    ```bash
-    sudo journalctl -u eightyeightyeight.service -f
+    sudo systemctl status eightyeightyeight-record.service
     ```
 
 ## Architecture

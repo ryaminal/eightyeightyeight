@@ -3,15 +3,15 @@
 # and ensure proper environment variable management.
 
 [Unit]
-Description=Eightyeightyeight Video Capture Service
+Description=Eightyeightyeight Video Recording Service
 After=network.target
 
 [Service]
-ExecStart=/usr/local/bin/eightyeightyeight record
+# Assumes config is placed at /etc/eightyeightyeight/config.toml
+ExecStart=/usr/local/bin/eightyeightyeight record --config /etc/eightyeightyeight/config.toml
 Restart=on-failure
 User=root
 Group=root
-EnvironmentFile=/etc/eightyeightyeight/config.toml
 
 [Install]
 WantedBy=multi-user.target
