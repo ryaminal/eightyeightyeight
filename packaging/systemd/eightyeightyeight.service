@@ -1,3 +1,7 @@
+# NOTE: This systemd service file is a stub for demonstration purposes.
+# In a production environment, you would need to adjust paths, users, 
+# and ensure proper environment variable management.
+
 [Unit]
 Description=Eightyeightyeight Video Capture Service
 After=network.target
