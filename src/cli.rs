@@ -48,6 +48,12 @@ pub enum Commands {
         #[arg(short, long, default_value = "8088")]
         port: u16,
     },
+    /// Initialize a new configuration file via an interactive wizard
+    Init {
+        /// Output path for the generated configuration
+        #[arg(short, long, default_value = "config.toml")]
+        output: String,
+    },
 }
 
 #[cfg(test)]
@@ -60,6 +66,15 @@ mod tests {
         match args.command {
             Commands::Record { config } => assert_eq!(config, "my_config.toml"),
             _ => panic!("Expected Record command"),
+        }
+    }
+
+    #[test]
+    fn test_init_command() {
+        let args = Args::parse_from(&["app", "init", "--output", "new_config.toml"]);
+        match args.command {
+            Commands::Init { output } => assert_eq!(output, "new_config.toml"),
+            _ => panic!("Expected Init command"),
         }
     }
 

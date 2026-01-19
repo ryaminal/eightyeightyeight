@@ -6,6 +6,7 @@ mod config;
 mod metrics;
 mod pipeline;
 mod secrets;
+mod wizard;
 
 fn load_config(path: &str) -> anyhow::Result<config::Config> {
     info!("Loading configuration from: {}", path);
@@ -72,6 +73,9 @@ fn main() -> anyhow::Result<()> {
             let config = load_config(&config)?;
             info!("Receiving on {}:{}", listen, port);
             pipeline::run_receive_pipeline(&config, &listen, port)?;
+        }
+        cli::Commands::Init { output } => {
+            wizard::run(output)?;
         }
     }
 

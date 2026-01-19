@@ -28,3 +28,8 @@ This file tracks all major tracks for the project. Each track has its own detail
   - **Status:** Completed
   - **Description:** Implement system observability with metrics (FPS, Bitrate).
   - **Folder:** [implement_observability_20260117](./archive/implement_observability_20260117/)
+
+- [x] **Track: Interactive Configuration TUI**
+  - **Status:** Completed
+  - **Description:** Implement an interactive CLI wizard to easily generate configuration files.
+  - **Folder:** [interactive_configuration_tui_20260119](./archive/interactive_configuration_tui_20260119/)
