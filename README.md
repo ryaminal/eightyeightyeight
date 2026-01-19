@@ -98,6 +98,26 @@ You can stream encrypted video over the network (UDP/RTP).
 ./target/release/eightyeightyeight stream --dest <RECEIVER_IP> --port 8088 --config config.toml
 ```
 
+## Manual Testing One-Liners
+
+These commands are useful for quickly verifying functionality during development.
+
+**Test Recording (10 seconds):**
+```bash
+timeout 10 cargo run -- record
+```
+
+**Test Playback:**
+```bash
+cargo run -- play --input output.ts.enc
+```
+
+**Test Local Stream/Receive Loop:**
+```bash
+# Starts receiver in background, streams for 10s, then cleans up
+cargo run -- receive & sleep 2 && timeout 10 cargo run -- stream && kill $!
+```
+
 ## Deployment (Systemd)
 
 This project includes a `systemd` service file for running `eightyeightyeight` as a background service on Linux.

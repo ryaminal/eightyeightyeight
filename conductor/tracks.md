@@ -4,10 +4,15 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-- [ ] **Track: Operational Integration**
-  - **Status:** New
+- [x] **Track: Switch to SplitMuxSink**
+  - **Status:** Completed
+  - **Description:** Switch to splitmuxsink for automatic file rotation and loop recording.
+  - **Folder:** [switch_to_splitmuxsink_20260117](./tracks/switch_to_splitmuxsink_20260117/)
+
+- [x] **Track: Operational Integration**
+  - **Status:** Completed
   - **Description:** Create systemd service files and handle operational concerns like disk space.
-  - **Folder:** [operational_integration_20260117](./tracks/operational_integration_20260117/)
+  - **Folder:** [operational_integration_20260117](./archive/operational_integration_20260117/)
 
 - [x] **Track: Secure Key Resolution**
   - **Status:** Completed

@@ -14,6 +14,10 @@ pub struct Config {
     pub cv_enabled: bool,
     #[serde(default)]
     pub min_disk_space_mb: Option<u64>,
+    #[serde(default)]
+    pub max_files: Option<u32>,
+    #[serde(default)]
+    pub max_file_size_mb: Option<u64>,
 }
 
 impl Config {
@@ -168,5 +172,31 @@ mod tests {
 
         let config = Config::load(file.path().to_str().unwrap()).expect("Failed to load config");
         assert_eq!(config.min_disk_space_mb, Some(1024));
+    }
+
+    #[test]
+    fn test_load_with_splitmux_config() {
+        let valid_key = "00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff";
+        let toml_str = format!(
+            r#"
+            device = "/dev/video_test"
+            width = 1280
+            height = 720
+            framerate = "30/1"
+            bitrate = 2500
+            key = "literal:{}"
+            output_path = "test_output_%05d.ts.enc"
+            max_files = 10
+            max_file_size_mb = 50
+        "#,
+            valid_key
+        );
+
+        let mut file = NamedTempFile::new().unwrap();
+        write!(file, "{}", toml_str).unwrap();
+
+        let config = Config::load(file.path().to_str().unwrap()).expect("Failed to load config");
+        assert_eq!(config.max_files, Some(10));
+        assert_eq!(config.max_file_size_mb, Some(50));
     }
 }

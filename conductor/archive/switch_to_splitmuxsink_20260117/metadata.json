@@ -1,0 +1,8 @@
+{
+  "track_id": "switch_to_splitmuxsink_20260117",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-01-17T04:00:00Z",
+  "updated_at": "2026-01-17T04:00:00Z",
+  "description": "Switch to splitmuxsink for automatic file rotation and loop recording."
+}

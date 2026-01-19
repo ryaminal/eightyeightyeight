@@ -1,5 +1,4 @@
 use clap::Parser;
-use fs2;
 use tracing::{error, info};
 
 mod cli;
@@ -22,16 +21,16 @@ fn load_config(path: &str) -> anyhow::Result<config::Config> {
 fn handle_record_command(config_path: &str) -> anyhow::Result<()> {
     let config = load_config(config_path)?;
 
-    if let Some(min_space_mb) = config.min_disk_space_mb {
-        if let Some(output_dir) = config.output_path.parent() {
-            let free_space_mb = fs2::available_space(output_dir)? / 1_000_000;
-            if free_space_mb < min_space_mb {
-                anyhow::bail!(
-                    "Not enough disk space. Required: {} MB, Available: {} MB",
-                    min_space_mb,
-                    free_space_mb
-                );
-            }
+    if let (Some(min_space_mb), Some(output_dir)) =
+        (config.min_disk_space_mb, config.output_path.parent())
+    {
+        let free_space_mb = fs2::available_space(output_dir)? / 1_000_000;
+        if free_space_mb < min_space_mb {
+            anyhow::bail!(
+                "Not enough disk space. Required: {} MB, Available: {} MB",
+                min_space_mb,
+                free_space_mb
+            );
         }
     }
 
