@@ -1,0 +1,8 @@
+{
+  "track_id": "enhance_wizard_device_discovery_20260119",
+  "type": "enhancement",
+  "status": "completed",
+  "created_at": "2026-01-19T00:20:00Z",
+  "updated_at": "2026-01-19T00:35:00Z",
+  "description": "Upgrade the configuration wizard to use GStreamer for device discovery and capability probing."
+}

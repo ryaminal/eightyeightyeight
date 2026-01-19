@@ -33,3 +33,8 @@ This file tracks all major tracks for the project. Each track has its own detail
   - **Status:** Completed
   - **Description:** Implement an interactive CLI wizard to easily generate configuration files.
   - **Folder:** [interactive_configuration_tui_20260119](./archive/interactive_configuration_tui_20260119/)
+
+- [x] **Track: Enhance Wizard Device Discovery**
+  - **Status:** Completed
+  - **Description:** Upgrade the configuration wizard to use GStreamer for device discovery and capability probing.
+  - **Folder:** [enhance_wizard_device_discovery_20260119](./archive/enhance_wizard_device_discovery_20260119/)
