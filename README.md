@@ -6,6 +6,10 @@ A robust, secure video capture and playback application for embedded Linux, writ
 
 `eightyeightyeight` demonstrates a production-grade GStreamer implementation in Rust. It provides a CLI for recording encrypted video from a webcam and playing it back, prioritizing reliability and correctness over raw feature count.
 
+## Motivation
+
+This project exists to bridge the gap between "it works" shell scripts and production-ready systems software. I wanted to verify how viable Rust is for low-level media pipelines compared to C/C++. Specifically, I aimed to solve the "secure embedded recorder" problem—where power loss is common and data privacy is mandatory—using modern, memory-safe tooling.
+
 ## Features
 
 - **Secure Recording:** Captures video and encrypts it on-the-fly using AES-256.
@@ -19,23 +23,30 @@ A robust, secure video capture and playback application for embedded Linux, writ
 - **Rust:** Latest stable toolchain.
 - **GStreamer:** Development libraries and plugins.
   - **Ubuntu / Debian:**
+
     ```bash
     sudo apt install libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-opencv
     ```
+
   - **Fedora:**
+
     ```bash
     sudo dnf install gstreamer1-devel gstreamer1-plugins-base-devel gstreamer1-plugins-base gstreamer1-plugins-good gstreamer1-plugins-bad-free gstreamer1-plugins-bad-free-opencv gstreamer1-plugins-ugly-free gstreamer1-libav
     ```
+
   - **Arch Linux:**
+
     ```bash
     sudo pacman -S gstreamer gst-plugins-base gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav
     ```
+
   - **macOS (Homebrew):**
+
     ```bash
     brew install gstreamer gst-plugins-base gst-plugins-good gst-plugins-bad gst-plugins-ugly gst-libav
     ```
 
-*Note: The `gst-plugins-bad` package is required for the optional `cv_enabled` (face detection) feature.*
+_Note: The `gst-plugins-bad` package is required for the optional `cv_enabled` (face detection) feature._
 
 ## Installation
 
@@ -126,16 +137,19 @@ You can stream encrypted video over the network (UDP/RTP).
 These commands are useful for quickly verifying functionality during development.
 
 **Test Recording (10 seconds):**
+
 ```bash
 timeout 10 cargo run -- record
 ```
 
 **Test Playback:**
+
 ```bash
 cargo run -- play --input output.ts.enc
 ```
 
 **Test Local Stream/Receive Loop:**
+
 ```bash
 # Starts receiver in background, streams for 10s, then cleans up
 cargo run -- receive & sleep 2 && timeout 10 cargo run -- stream && kill $!
@@ -147,32 +161,32 @@ This project includes example `systemd` service files for running `eightyeightye
 
 ### 1. Setup
 
-1.  **Copy the binary:**
+1. **Copy the binary:**
 
     ```bash
     sudo cp ./target/release/eightyeightyeight /usr/local/bin/
     ```
 
-2.  **Copy the service files:**
+2. **Copy the service files:**
 
     ```bash
     # For recording
     sudo cp ./packaging/systemd/eightyeightyeight-record.service /etc/systemd/system/
-    
+
     # For streaming
     sudo cp ./packaging/systemd/eightyeightyeight-stream.service /etc/systemd/system/
-    
+
     # For receiving
     sudo cp ./packaging/systemd/eightyeightyeight-receive.service /etc/systemd/system/
     ```
 
-3.  **Create a configuration directory:**
+3. **Create a configuration directory:**
 
     ```bash
     sudo mkdir -p /etc/eightyeightyeight
     ```
 
-4.  **Copy and edit the configuration file:**
+4. **Copy and edit the configuration file:**
 
     ```bash
     sudo cp ./config.toml /etc/eightyeightyeight/config.toml
@@ -181,27 +195,33 @@ This project includes example `systemd` service files for running `eightyeightye
 
 ### 2. Usage
 
--   **Start a service (e.g., record):**
+- **Start a service (e.g., record):**
 
-    ```bash
-    sudo systemctl start eightyeightyeight-record.service
-    ```
+  ```bash
+  sudo systemctl start eightyeightyeight-record.service
+  ```
 
--   **Enable on boot:**
+- **Enable on boot:**
 
-    ```bash
-    sudo systemctl enable eightyeightyeight-record.service
-    ```
+  ```bash
+  sudo systemctl enable eightyeightyeight-record.service
+  ```
 
--   **Check the status:**
+- **Check the status:**
 
-    ```bash
-    sudo systemctl status eightyeightyeight-record.service
-    ```
+  ```bash
+  sudo systemctl status eightyeightyeight-record.service
+  ```
 
 ## Architecture
 
 See [DESIGN.md](./DESIGN.md) for details on the system architecture and pipeline design.
+
+## Challenges & Lessons Learned
+
+- **GStreamer in Rust:** While the bindings are excellent, translating dynamic pipeline manipulation from C documentation to Rust's strict ownership model required a shift in mental models, particularly regarding object lifetimes and callbacks.
+- **Secure File Rotation:** Getting `splitmuxsink` to work seamlessly with on-the-fly AES encryption was non-trivial. It required constructing a custom "sink bin" to ensure every rotated file segment was independently decryptable and contained a valid header.
+- **Hardware Abstraction:** Initially, I relied on simple filesystem checks (`/dev/video*`) for device discovery. I learned that true robustness requires querying the hardware capabilities via the `GstDeviceMonitor` API to prevent invalid configuration states before the pipeline even starts.
 
 ## Future Improvements
 
@@ -209,3 +229,4 @@ See [DESIGN.md](./DESIGN.md) for details on the system architecture and pipeline
 - **Packaging:** Creation of a Yocto recipe for embedded Linux deployment.
 - **Hardware Acceleration:** Support for hardware-specific encoding/decoding elements (e.g., `vaapih264enc`, `omxh264enc`).
 - **Secure Key Management:** Integration with Kubernetes Secrets or Cloud KMS.
+
