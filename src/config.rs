@@ -75,7 +75,7 @@ mod tests {
 
         let config = Config::load(file.path().to_str().unwrap()).expect("Failed to load config");
         assert_eq!(config.key, valid_key);
-        assert_eq!(config.cv_enabled, false);
+        assert!(!config.cv_enabled);
         assert_eq!(config.min_disk_space_mb, None);
     }
 

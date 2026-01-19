@@ -190,7 +190,7 @@ mod tests {
     #[test]
     fn test_file_resolver_trim_whitespace() {
         let mut file = NamedTempFile::new().unwrap();
-        write!(file, "  file_secret_trimmed  \n").unwrap();
+        writeln!(file, "  file_secret_trimmed  ").unwrap();
         let path = file.path().to_str().unwrap();
 
         let resolver = FileResolver::new(path);

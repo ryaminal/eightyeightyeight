@@ -62,7 +62,7 @@ mod tests {
 
     #[test]
     fn test_record_command() {
-        let args = Args::parse_from(&["app", "record", "--config", "my_config.toml"]);
+        let args = Args::parse_from(["app", "record", "--config", "my_config.toml"]);
         match args.command {
             Commands::Record { config } => assert_eq!(config, "my_config.toml"),
             _ => panic!("Expected Record command"),
@@ -71,7 +71,7 @@ mod tests {
 
     #[test]
     fn test_init_command() {
-        let args = Args::parse_from(&["app", "init", "--output", "new_config.toml"]);
+        let args = Args::parse_from(["app", "init", "--output", "new_config.toml"]);
         match args.command {
             Commands::Init { output } => assert_eq!(output, "new_config.toml"),
             _ => panic!("Expected Init command"),
@@ -80,7 +80,7 @@ mod tests {
 
     #[test]
     fn test_play_command() {
-        let args = Args::parse_from(&[
+        let args = Args::parse_from([
             "app",
             "play",
             "--input",
@@ -99,7 +99,7 @@ mod tests {
 
     #[test]
     fn test_stream_command() {
-        let args = Args::parse_from(&[
+        let args = Args::parse_from([
             "app",
             "stream",
             "--dest",
@@ -121,7 +121,7 @@ mod tests {
 
     #[test]
     fn test_receive_command() {
-        let args = Args::parse_from(&[
+        let args = Args::parse_from([
             "app",
             "receive",
             "--listen",

@@ -88,14 +88,6 @@ mod tests {
     use std::io::Write;
     use tempfile::NamedTempFile;
 
-    // This is a mock of the pipeline runner for testing purposes.
-    mod pipeline {
-        use crate::config;
-        pub fn run_record_pipeline(_config: &config::Config) -> anyhow::Result<()> {
-            Ok(())
-        }
-    }
-
     #[test]
     fn test_disk_space_check_fails() {
         let temp_dir = tempfile::tempdir().unwrap();
