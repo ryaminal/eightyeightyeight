@@ -204,5 +204,7 @@ See [DESIGN.md](./DESIGN.md) for details on the system architecture and pipeline
 
 ## Future Improvements
 
-- **Secure Key Management:** Integration with Kubernetes Secrets or Cloud KMS to avoid storing keys in plain text `config.toml`.
+- **Edge AI:** Integration of lightweight object detection (e.g., YOLO/TFLite).
+- **Packaging:** Creation of a Yocto recipe for embedded Linux deployment.
 - **Hardware Acceleration:** Support for hardware-specific encoding/decoding elements (e.g., `vaapih264enc`, `omxh264enc`).
+- **Secure Key Management:** Integration with Kubernetes Secrets or Cloud KMS.

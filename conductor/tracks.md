@@ -38,3 +38,8 @@ This file tracks all major tracks for the project. Each track has its own detail
   - **Status:** Completed
   - **Description:** Upgrade the configuration wizard to use GStreamer for device discovery and capability probing.
   - **Folder:** [enhance_wizard_device_discovery_20260119](./archive/enhance_wizard_device_discovery_20260119/)
+
+- [x] **Track: Final Project Submission Prep**
+  - **Status:** Completed
+  - **Description:** Final polish, documentation review, and cleanup before project submission.
+  - **Folder:** [final_project_submission_prep_20260119](./archive/final_project_submission_prep_20260119/)

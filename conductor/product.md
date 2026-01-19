@@ -23,12 +23,16 @@ A robust, secure, and configurable video capture pipeline designed for embedded 
 - **Configuration Management:** Full control over pipeline parameters (device path, keys, codecs, limits) via external configuration.
 
 ### Extended Capabilities (Stretch Goals)
-- **Operational Integration:** `systemd` service files for automatic startup and supervision.
-- **System Observability:** Exportable runtime metrics (frame drops, buffer usage, IO rates).
-- **Live Streaming:** Network streaming capabilities (e.g., RTSP/WebRTC) alongside local recording.
-- **Interactive Configuration TUI:** A Terminal User Interface to auto-discover video devices, interactively generate configuration files (wizard-style), and manage multiple configuration contexts.
+- **Operational Integration:** `systemd` service files for automatic startup and supervision. (Implemented)
+- **System Observability:** Exportable runtime metrics (frame drops, buffer usage, IO rates). (Implemented)
+- **Live Streaming:** Network streaming capabilities (e.g., RTSP/WebRTC) alongside local recording. (Implemented)
+- **Interactive Configuration TUI:** A Terminal User Interface to auto-discover video devices, interactively generate configuration files (wizard-style), and manage multiple configuration contexts. (Implemented)
+
+## Future Roadmap
 - **Edge AI:** Integration of lightweight object detection (e.g., YOLO/TFLite) for automated analysis.
 - **Packaging:** Creation of a Yocto recipe for deployment to custom Linux distributions.
+- **Hardware Acceleration:** Support for hardware-specific encoding/decoding elements (e.g., `vaapih264enc`, `omxh264enc`).
+- **Secure Key Management:** Integration with Kubernetes Secrets or Cloud KMS.
 
 ## Success Criteria
 - **Execution:** The pipeline runs reliably on a standard Linux environment with a webcam.
